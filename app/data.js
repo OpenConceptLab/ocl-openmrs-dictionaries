@@ -62,8 +62,7 @@ export async function fetchGraph({
   async function getAll(path) {
     const results = [];
     for (let page = 1; ; page += 1) {
-      const separator = path.includes('?') ? '&' : '?';
-      const batch = await get(`${path}${separator}limit=${PAGE_SIZE}&page=${page}`);
+      const batch = await get(`${path}&limit=${PAGE_SIZE}&page=${page}`);
       results.push(...batch);
       if (batch.length < PAGE_SIZE) return results;
     }
@@ -125,14 +124,8 @@ export async function fetchGraph({
   while (queue.length) {
     const batch = queue.splice(0, concurrency);
     await Promise.all(batch.map(async (url) => {
-      try {
-        await visit(url);
-      } catch (error) {
-        failed = true;
-        throw error;
-      }
-      // Requests still in flight when a sibling fails finish later; they mustn't report progress.
-      if (failed) return;
+      await visit(url).catch((error) => { failed = true; throw error; });
+      if (failed) return; // a sibling failed while this one was in flight: report no more progress
       done += 1;
       onProgress({ done, total: queued.size });
     }));

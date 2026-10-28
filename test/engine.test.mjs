@@ -74,10 +74,10 @@ test('Rule 1: a retired mapping counts only when retired mappings are counted', 
 
 test('Rule 4: leaving mappings as stored drops the answers of a question that was not replaced', () => {
   const scenario = SCENARIOS.find((s) => s.id === '1');
-  const result = expand(graph, scenario.reference, { ...PRESETS.draft.options, answers: 'leave' });
-  assert.ok(result.mappings.length === 3 && result.mappings.every((m) => m.status === 'dangling'));
-  const repointed = expand(graph, scenario.reference, PRESETS.draft.options);
-  assert.ok(repointed.mappings.every((m) => m.status === 'repointed'));
+  const edges = (options) => expand(graph, scenario.reference, options).tree.children.flatMap((child) => child.edges);
+  const left = edges({ ...PRESETS.draft.options, answers: 'leave' });
+  assert.ok(left.length === 3 && left.every((edge) => edge.status === 'dangling'));
+  assert.ok(edges(PRESETS.draft.options).every((edge) => edge.status === 'repointed'));
 });
 
 test('Rule 5: a rewritten reference is saved as the replacement', () => {
@@ -92,6 +92,17 @@ test('Rule 6: blocking the reference adds nothing', () => {
   const result = expand(graph, scenario.reference, { ...PRESETS.draft.options, adding: 'block' });
   assert.equal(result.members.length, 0);
   assert.equal(result.adding.kind, 'block');
+});
+
+test('Rule 3 union: a child that is both a set member and an answer on the referenced side keeps both', () => {
+  const g = made([sameAs('PIH', concept('PIH', 10), concept('CIEL', 1))]);
+  g.concepts[concept('CIEL', 2)] = { url: concept('CIEL', 2), name: 'child' };
+  for (const mapType of ['CONCEPT-SET', 'Q-AND-A']) {
+    g.mappings.push({ url: `/orgs/CIEL/sources/CIEL/mappings/${mapType}/`, holder: '/orgs/CIEL/sources/CIEL/', mapType, from: concept('CIEL', 1), to: concept('CIEL', 2), retired: false });
+  }
+  const tree = expand(g, { concept: concept('CIEL', 1), cascade: true }, { ...PRESETS.draft.options, cascade: 'union' }).tree;
+  assert.equal(shortLabel(tree.url), 'PIH:10');
+  assert.deepEqual(tree.children[0].edges.map((edge) => edge.mapping.mapType), ['CONCEPT-SET', 'Q-AND-A']);
 });
 
 test('Rules 5 and 6 still see the equivalent when the expansion leaves such concepts out', () => {

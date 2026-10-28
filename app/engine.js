@@ -91,25 +91,21 @@ export const RULES = [
   },
 ];
 
-const DRAFT = {
+export const DEFAULT_OPTIONS = {
   ranked: 'PIH>CIEL', lookIn: 'sources', direction: 'either', retired: 'ignore', substitution: 'replace',
   tie: 'keep', cascade: 'replacement', answers: 'repoint', reference: 'keep', adding: 'inform',
 };
 
 export const PRESETS = {
-  draft: { label: 'Draft defaults', options: DRAFT },
-  today: {
-    label: 'OCL today',
-    help: "$cascade with omitIfExistsIn pointed at the collection: it checks only what the collection already contains, and leaves concepts out rather than replacing them.",
-    options: { ...DRAFT, lookIn: 'collection', substitution: 'omit', adding: 'silent' },
-  },
-  referenced: { label: 'Follow the referenced concept', options: { ...DRAFT, cascade: 'referenced' } },
-  union: { label: 'Union of answers', options: { ...DRAFT, cascade: 'union' } },
-  stepwise: { label: 'Step by step', options: { ...DRAFT, cascade: 'stepwise' } },
-  off: { label: 'No equivalency', options: { ...DRAFT, substitution: 'off', adding: 'silent' } },
+  draft: { label: 'Draft defaults', options: DEFAULT_OPTIONS },
+  // $cascade with omitIfExistsIn pointed at the collection: it checks only what the collection already
+  // contains, and leaves concepts out rather than replacing them.
+  today: { label: 'OCL today', options: { ...DEFAULT_OPTIONS, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
+  referenced: { label: 'Follow the referenced concept', options: { ...DEFAULT_OPTIONS, cascade: 'referenced' } },
+  union: { label: 'Union of answers', options: { ...DEFAULT_OPTIONS, cascade: 'union' } },
+  stepwise: { label: 'Step by step', options: { ...DEFAULT_OPTIONS, cascade: 'stepwise' } },
+  off: { label: 'No equivalency', options: { ...DEFAULT_OPTIONS, substitution: 'off', adding: 'silent' } },
 };
-
-export const DEFAULT_OPTIONS = DRAFT;
 
 const SOURCE_PATTERN = /^\/(?:orgs|users)\/[^/]+\/(?:sources|collections)\/[^/]+\//;
 
@@ -150,23 +146,20 @@ export function indexGraph(graph) {
     push(from, mapping.from, mapping);
     if (mapping.to) push(to, mapping.to, mapping);
   }
-  return { concepts: graph.concepts, mappings: graph.mappings, from, to };
+  return { ...graph, from, to };
 }
 
 // reference: { concept: url, cascade: boolean, rankedWhenAdded?: 'PIH>CIEL' }
-// context.collection: urls already in the collection, for the "collection only" option.
-export function expand(graph, reference, options = {}, context = {}) {
+export function expand(graph, reference, options = {}) {
   const g = indexGraph(graph);
   const o = { ...DEFAULT_OPTIONS, ...options };
-  const collection = new Set(context.collection || []);
   const trace = [];
-  const concept = (url) => g.concepts[url] || { url, code: codeOf(url), name: '(not in the data)', missing: true };
   const isRetired = (url) => Boolean(g.concepts[url] && g.concepts[url].retired);
   const countRetired = o.retired === 'count';
 
-  const resolverFor = (order, substitution) => makeResolver(order.split('>').map((name) => SOURCES[name]), substitution);
-
-  function makeResolver(ranked, substitution) {
+  // Returns resolve(url) for one ranked list ('PIH>CIEL') and one Rule 2 substitution mode.
+  function makeResolver(order, substitution) {
+    const ranked = order.split('>').map((name) => SOURCES[name]);
     const rank = (url) => {
       const index = ranked.indexOf(sourceOf(url));
       return index === -1 ? Infinity : index;
@@ -179,13 +172,11 @@ export function expand(graph, reference, options = {}, context = {}) {
       const found = [];
       const consider = (other, mapping) => {
         const otherSource = sourceOf(other);
-        if (!other || otherSource === own || rank(other) === Infinity) return;
-        if (mapping.retired && !countRetired) return;
-        if ((isRetired(other) || isRetired(url)) && !countRetired) return;
+        if (otherSource === own || rank(other) === Infinity) return;
+        if (!countRetired && (mapping.retired || isRetired(other) || isRetired(url))) return;
         const higher = rank(other) < rank(url) ? otherSource : own;
-        const stored = mapping.holder;
-        if (o.direction === 'higher' && stored !== higher) return;
-        if (o.direction === 'lower' && stored === higher) return;
+        if (o.direction === 'higher' && mapping.holder !== higher) return;
+        if (o.direction === 'lower' && mapping.holder === higher) return;
         found.push({ url: other, mapping });
       };
       for (const m of g.from.get(url) || []) {
@@ -203,7 +194,7 @@ export function expand(graph, reference, options = {}, context = {}) {
       let result = { url, replaced: false };
       if (substitution !== 'off') {
         let candidates = equivalents(url).filter((c) => rank(c.url) < rank(url));
-        if (o.lookIn === 'collection') candidates = candidates.filter((c) => collection.has(c.url));
+        if (o.lookIn === 'collection') candidates = []; // the prototype's collection starts empty
         if (candidates.length) {
           const best = Math.min(...candidates.map((c) => rank(c.url)));
           const top = candidates.filter((c) => rank(c.url) === best);
@@ -217,7 +208,7 @@ export function expand(graph, reference, options = {}, context = {}) {
           if (!chosen) {
             result = { url, replaced: false, flags };
           } else if (substitution === 'omit') {
-            result = { url: null, omitted: url, via: chosen.mapping, equivalent: chosen.url, flags };
+            result = { url: null, via: chosen.mapping, equivalent: chosen.url, flags };
           } else {
             result = { url: chosen.url, replaced: true, original: url, via: chosen.mapping, flags };
           }
@@ -227,20 +218,20 @@ export function expand(graph, reference, options = {}, context = {}) {
       return result;
     }
 
-    return { resolve, rank };
+    return resolve;
   }
 
-  const now = resolverFor(o.ranked, o.substitution);
+  const now = makeResolver(o.ranked, o.substitution);
   // Rules 5 and 6 act when the reference is added, so they need the equivalent itself even when the
   // expansion leaves such concepts out.
-  const whenAdded = resolverFor(reference.rankedWhenAdded || 'PIH>CIEL', o.substitution === 'off' ? 'off' : 'replace');
+  const whenAdded = makeResolver(reference.rankedWhenAdded || 'PIH>CIEL', o.substitution === 'off' ? 'off' : 'replace');
 
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
-  const atAdd = whenAdded.resolve(reference.concept);
+  const atAdd = whenAdded(reference.concept);
   const adding = describeAdding(reference.concept, atAdd, o.adding);
   if (adding.blocked) {
     trace.push(`Rule 6: adding ${shortLabel(reference.concept)} is blocked, so the collection gets nothing.`);
-    return { reference: { ...reference, stored: null }, adding, members: [], tree: null, trace, mappings: [] };
+    return { reference: { ...reference, stored: null }, adding, members: [], tree: null, trace };
   }
 
   // Rule 5: the reference stays as written, or is rewritten when it's added.
@@ -267,18 +258,21 @@ export function expand(graph, reference, options = {}, context = {}) {
     if (o.cascade === 'stepwise' && original !== member && depth === 0) return referenced();
     if (o.cascade !== 'union') return own();
     const plan = own();
-    const byTarget = new Map(plan.map((step) => [now.resolve(step.mapping.to).url, step]));
+    const covered = new Map(plan.map((step) => [now(step.mapping.to).url, step]));
+    const added = new Set();
     for (const extra of [original, ...alsoFrom].filter((url) => url !== member)) {
       for (const mapping of structural(extra)) {
-        const target = now.resolve(mapping.to).url;
-        const step = target && byTarget.get(target);
+        const target = now(mapping.to).url;
+        const step = target && covered.get(target);
         if (step) {
           if (mapping.to !== step.mapping.to) step.alsoFrom.push(mapping.to);
-        } else {
-          const added = { mapping, alsoFrom: [] };
-          plan.push(added);
-          if (target) byTarget.set(target, added);
+          continue;
         }
+        // Keep each relationship the referenced side adds: a child can be both a set member and an answer.
+        const key = `${target || mapping.to} ${mapping.mapType}`;
+        if (added.has(key)) continue;
+        added.add(key);
+        plan.push({ mapping, alsoFrom: [] });
       }
     }
     return plan;
@@ -286,11 +280,10 @@ export function expand(graph, reference, options = {}, context = {}) {
 
   const members = new Map();
   const expanded = new Set();
-  const expansionMappings = [];
 
   function addMember(url, resolution) {
     if (!members.has(url)) {
-      members.set(url, { url, concept: concept(url), replaced: resolution.replaced ? resolution.original : null, via: resolution.via || null, flags: resolution.flags || [] });
+      members.set(url, { url, replaced: resolution.replaced ? resolution.original : null, flags: resolution.flags || [] });
       if (resolution.replaced) {
         trace.push(`Rule 2: ${shortLabel(resolution.original)} → ${shortLabel(url)}, via the SAME-AS mapping stored in ${sourceName(resolution.via.holder)}.`);
       }
@@ -303,7 +296,7 @@ export function expand(graph, reference, options = {}, context = {}) {
   }
 
   function visit(original, depth, alsoFrom = []) {
-    const resolution = now.resolve(original);
+    const resolution = now(original);
     const node = { original, url: resolution.url, resolution, edges: [], children: [] };
     if (!resolution.url) {
       node.status = 'omitted';
@@ -340,7 +333,6 @@ export function expand(graph, reference, options = {}, context = {}) {
         status = o.answers === 'repoint' ? 'repointed' : 'dangling';
       }
       child.edges.push({ mapping, status });
-      expansionMappings.push({ mapping, from: resolution.url, to: target, status });
       if (status === 'dangling') {
         trace.push(`Rule 4: ${mapping.mapType} ${shortLabel(mapping.from)} → ${shortLabel(mapping.to)} stays as stored, so in OpenMRS ${shortLabel(resolution.url)} doesn't get ${shortLabel(target)}.`);
       }
@@ -355,7 +347,6 @@ export function expand(graph, reference, options = {}, context = {}) {
     members: [...members.values()],
     tree,
     trace,
-    mappings: expansionMappings,
   };
 }
 

@@ -7,7 +7,6 @@ import { fetchGraph, ApiError } from './data.js';
 
 const TBV3 = 'https://app.v3.openconceptlab.org/#';
 const TOKEN_KEY = 'ocl-openmrs-dictionaries.token';
-let liveRun = 0;
 const ANY = 'any';
 
 const state = {
@@ -18,7 +17,6 @@ const state = {
   live: { concept: '', cascade: true, token: '', remember: false, graph: null, root: null, fetchedCascade: true, error: '', progress: '' },
 };
 let snapshot = null;
-let snapshotInfo = null;
 
 // --- small DOM helper: text only, never HTML ---
 function h(tag, attrs = {}, ...children) {
@@ -46,8 +44,7 @@ function readHash() {
   const params = new URLSearchParams(location.hash.slice(1));
   const scenario = params.get('s');
   if (scenario === ANY || SCENARIOS.some((s) => s.id === scenario)) state.scenario = scenario;
-  const preset = params.get('preset');
-  state.options = { ...(PRESETS[preset] ? PRESETS[preset].options : DEFAULT_OPTIONS) };
+  state.options = { ...DEFAULT_OPTIONS };
   for (const rule of RULES) {
     const value = params.get(rule.key);
     if (rule.options.some((option) => option.value === value)) state.options[rule.key] = value;
@@ -128,7 +125,6 @@ function renderTabs() {
 }
 
 // --- results ---
-const conceptLink = (url) => `${TBV3}${url}`;
 
 function sourceChip(url) {
   const name = sourceName(sourceOf(url));
@@ -140,7 +136,7 @@ function conceptLabel(graph, url) {
   const concept = graph.concepts[url];
   return [
     sourceChip(url),
-    h('a', { class: 'code', href: conceptLink(url), target: '_blank', rel: 'noopener' }, codeOf(url)),
+    h('a', { class: 'code', href: `${TBV3}${url}`, target: '_blank', rel: 'noopener' }, codeOf(url)),
     h('span', { class: 'name' }, concept ? concept.name : '(not in the data)'),
     concept && concept.class ? h('span', { class: 'class' }, concept.class) : null,
   ];
@@ -174,8 +170,7 @@ function renderNode(graph, node, onlyHere) {
     node.children.length ? h('ul', {}, ...node.children.map((child) => renderNode(graph, child, onlyHere))) : null);
 }
 
-function resultCard(graph, reference, options, heading, onlyHere) {
-  const result = expand(graph, reference, options);
+function resultCard(graph, reference, result, heading, onlyHere) {
   const members = result.members;
   const bySource = Object.keys(SOURCES).map((name) => [name, members.filter((m) => sourceName(sourceOf(m.url)) === name).length]);
   const replaced = members.filter((m) => m.replaced).length;
@@ -184,7 +179,7 @@ function resultCard(graph, reference, options, heading, onlyHere) {
     ? h('span', { class: 'inline-concept' }, ...conceptLabel(graph, result.reference.stored), reference.cascade ? 'with cascade' : null)
     : null;
 
-  return { result, card: h('article', { class: 'card' },
+  return h('article', { class: 'card' },
     h('h3', {}, heading),
     h('dl', { class: 'card__meta' },
       h('div', {}, h('dt', {}, 'Reference as written'), h('dd', {}, written)),
@@ -196,27 +191,18 @@ function resultCard(graph, reference, options, heading, onlyHere) {
     result.tree ? h('ul', { class: 'tree' }, renderNode(graph, result.tree, onlyHere)) : null,
     h('details', { class: 'trace' },
       h('summary', {}, `Why: ${result.trace.length} decisions`),
-      h('ol', {}, ...result.trace.map((line) => h('li', {}, line))))) };
+      h('ol', {}, ...result.trace.map((line) => h('li', {}, line)))));
 }
 
 function renderResults(graph, reference) {
-  const container = h('div', { class: `results${state.compare ? ' results--compare' : ''}` });
-  const mineLabel = presetMatching(state.options) ? PRESETS[presetMatching(state.options)].label : 'Your options';
-  if (!state.compare) {
-    container.append(resultCard(graph, reference, state.options, mineLabel).card);
-    return container;
-  }
-  const other = PRESETS[state.compare];
-  const urls = (options) => new Set(expand(graph, reference, options).members.map((m) => m.url));
-  const mine = urls(state.options);
-  const theirs = urls(other.options);
-  const onlyMine = new Set([...mine].filter((url) => !theirs.has(url)));
-  const onlyTheirs = new Set([...theirs].filter((url) => !mine.has(url)));
-  container.append(
-    resultCard(graph, reference, state.options, mineLabel, onlyMine).card,
-    resultCard(graph, reference, other.options, other.label, onlyTheirs).card,
-  );
-  return container;
+  const sides = [[state.options, PRESETS[presetMatching(state.options)]?.label || 'Your options']];
+  if (state.compare) sides.push([PRESETS[state.compare].options, PRESETS[state.compare].label]);
+  const results = sides.map(([options]) => expand(graph, reference, options));
+  const urls = results.map((result) => new Set(result.members.map((m) => m.url)));
+  // In a comparison, mark the concepts only one side contains.
+  const onlyHere = (i) => (state.compare ? new Set([...urls[i]].filter((url) => !urls[1 - i].has(url))) : null);
+  return h('div', { class: `results${state.compare ? ' results--compare' : ''}` },
+    ...sides.map(([, heading], i) => resultCard(graph, reference, results[i], heading, onlyHere(i))));
 }
 
 function renderScenario() {
@@ -267,23 +253,19 @@ async function runLive() {
   storage.set(TOKEN_KEY, live.remember ? token : '');
   // Read with the settings as they are now; the checkbox can change while the requests run.
   const cascade = live.cascade;
-  const run = ++liveRun;
   Object.assign(live, { error: '', progress: 'Starting…', graph: null, root: null });
   renderScenario();
   try {
     const graph = await fetchGraph({
       roots: [root], sources: Object.values(SOURCES), token, cascade,
       onProgress: ({ done, total }) => {
-        if (run !== liveRun) return;
         live.progress = `Read ${done} of ${total} concepts so far…`;
         const progress = document.getElementById('live-progress');
         if (progress) progress.textContent = live.progress;
       },
     });
-    if (run !== liveRun) return;
     Object.assign(live, { graph: indexGraph(graph), root, fetchedCascade: cascade, progress: '' });
   } catch (error) {
-    if (run !== liveRun) return;
     live.progress = '';
     live.error = error instanceof ApiError && (error.status === 401 || error.status === 403)
       ? 'The OCL API refused the request. Check that the token is right and still active.'
@@ -302,14 +284,13 @@ function renderLive() {
   } });
   const conceptInput = h('input', { type: 'text', id: 'live-concept', value: live.concept, placeholder: 'CIEL:163731', oninput: (event) => { live.concept = event.target.value; } });
   const cascade = h('input', { type: 'checkbox', id: 'live-cascade', checked: live.cascade, onchange: (event) => { live.cascade = event.target.checked; } });
-  const go = () => runLive();
 
   const parts = [
     h('div', { class: 'scenario-head' },
       h('h2', {}, 'Any concept'),
       h('p', {}, 'Expand any CIEL or PIH concept under the options above, reading live from OCL. PIH and CIEL HEAD, as in the scenarios.')),
     h('p', { class: 'notice' }, 'Uses your own OCL API token (from your OCL account settings). It goes only to api.openconceptlab.org; tick “Remember” to keep it in this browser.'),
-    h('form', { class: 'live-form', onsubmit: (event) => { event.preventDefault(); go(); } },
+    h('form', { class: 'live-form', onsubmit: (event) => { event.preventDefault(); runLive(); } },
       h('label', { class: 'field', for: 'live-token' }, h('span', {}, 'OCL API token'), tokenInput),
       h('label', { class: 'field', for: 'live-concept' }, h('span', {}, 'Concept'), conceptInput),
       h('div', { class: 'actions' },
@@ -329,7 +310,7 @@ function renderLive() {
 
 function renderFooter() {
   document.getElementById('footer').replaceChildren(
-    snapshotInfo ? `Scenario data: a stored copy of ${snapshotInfo.concepts} concepts read from OCL (${snapshotInfo.repoVersions} of PIH and CIEL) on ${snapshotInfo.generated}. ` : '',
+    snapshot ? `Scenario data: a stored copy of ${Object.keys(snapshot.concepts).length} concepts read from OCL (${snapshot.repoVersions} of PIH and CIEL) on ${snapshot.generated}. ` : '',
     h('a', { href: 'data/snapshot.json' }, 'The data'), ' · ',
     h('a', { href: 'https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki/Prototype' }, 'How the prototype works'));
 }
@@ -350,9 +331,7 @@ async function start() {
   update();
   try {
     const response = await fetch('data/snapshot.json');
-    const raw = await response.json();
-    snapshotInfo = { generated: raw.generated, repoVersions: raw.repoVersions, concepts: Object.keys(raw.concepts).length };
-    snapshot = indexGraph(raw);
+    snapshot = indexGraph(await response.json());
   } catch (error) {
     document.getElementById('scenario').replaceChildren(h('p', { class: 'notice notice--error' }, `Couldn't load the scenario data: ${error.message}`));
     return;

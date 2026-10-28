@@ -84,11 +84,9 @@ h3 { font-size: 16px; }
 .tree, .tree ul { list-style: none; margin: 0; padding: 0; }
 .tree ul { margin-left: 10px; padding-left: 12px; border-left: 1px solid var(--surface-n90); }
 .row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; padding: 3px 0; font-size: 14px; }
-.row .name { font-weight: 500; }
 .inline-concept { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; }
-.inline-concept .name { font-weight: 500; }
-.inline-concept .class { font-size: 12px; color: var(--text-muted); }
-.row .class { font-size: 12px; color: var(--text-muted); }
+.row .name, .inline-concept .name { font-weight: 500; }
+.row .class, .inline-concept .class { font-size: 12px; color: var(--text-muted); }
 .row .code { font-variant-numeric: tabular-nums; }
 .edge { font-size: 11px; color: var(--text-muted); min-width: 46px; }
 
