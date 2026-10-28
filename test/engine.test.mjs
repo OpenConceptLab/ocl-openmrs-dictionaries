@@ -105,6 +105,20 @@ test('Rule 3 union: a child that is both a set member and an answer on the refer
   assert.deepEqual(tree.children[0].edges.map((edge) => edge.mapping.mapType), ['CONCEPT-SET', 'Q-AND-A']);
 });
 
+test('Rule 3 union: two referenced children with one replacement both keep their descendants', () => {
+  const g = made([sameAs('PIH', concept('PIH', 10), concept('CIEL', 1))]);
+  for (const code of [2, 3, 4]) g.concepts[concept('CIEL', code)] = { url: concept('CIEL', code), name: `CIEL ${code}` };
+  g.concepts[concept('PIH', 20)] = { url: concept('PIH', 20), name: 'PIH 20' };
+  const link = (mapType, from, to) => ({ url: `${from}${mapType}-${to.split('/')[6]}/`, holder: from.slice(0, from.indexOf('concepts/')), mapType, from, to, retired: false });
+  g.mappings.push(
+    sameAs('PIH', concept('PIH', 20), concept('CIEL', 2)), sameAs('PIH', concept('PIH', 20), concept('CIEL', 3)),
+    link('CONCEPT-SET', concept('CIEL', 1), concept('CIEL', 2)), link('CONCEPT-SET', concept('CIEL', 1), concept('CIEL', 3)),
+    link('Q-AND-A', concept('CIEL', 3), concept('CIEL', 4)),
+  );
+  const result = expand(g, { concept: concept('CIEL', 1), cascade: true }, { ...PRESETS.draft.options, cascade: 'union', tie: 'lowest' });
+  assert.deepEqual(result.members.map((m) => shortLabel(m.url)), ['PIH:10', 'PIH:20', 'CIEL:4']);
+});
+
 test('Rules 5 and 6 still see the equivalent when the expansion leaves such concepts out', () => {
   const scenario = SCENARIOS.find((s) => s.id === '5');
   const omit = { ...PRESETS.draft.options, substitution: 'omit' };

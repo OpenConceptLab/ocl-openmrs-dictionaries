@@ -3,18 +3,20 @@
 
 import { RULES, PRESETS, DEFAULT_OPTIONS, SOURCES, expand, indexGraph, sourceOf, sourceName, codeOf, shortLabel } from './engine.js';
 import { SCENARIOS } from './scenarios.js';
-import { fetchGraph, ApiError } from './data.js';
+import { fetchGraph, ApiError, parseConcept } from './data.js';
 
 const TBV3 = 'https://app.v3.openconceptlab.org/#';
-const TOKEN_KEY = 'ocl-openmrs-dictionaries.token';
+// An earlier version could keep the token in localStorage, which every site on openconceptlab.github.io can
+// read. The token now lives only in page memory; this key is cleared on load.
+const OLD_TOKEN_KEY = 'ocl-openmrs-dictionaries.token';
 const ANY = 'any';
 
 const state = {
   scenario: SCENARIOS[0].id,
   options: { ...DEFAULT_OPTIONS },
   compare: '',
-  // The token stays in page memory between renders; it's written to localStorage only while "Remember" is ticked.
-  live: { concept: '', cascade: true, token: '', remember: false, graph: null, root: null, fetchedCascade: true, error: '', progress: '' },
+  // The token stays in page memory only, and is gone when the page is reloaded or closed.
+  live: { concept: '', cascade: true, token: '', graph: null, root: null, fetchedCascade: true, error: '', progress: '' },
 };
 let snapshot = null;
 
@@ -34,10 +36,6 @@ function h(tag, attrs = {}, ...children) {
   return el;
 }
 
-const storage = {
-  get(key) { try { return localStorage.getItem(key) || ''; } catch { return ''; } },
-  set(key, value) { try { if (value) localStorage.setItem(key, value); else localStorage.removeItem(key); } catch { /* unavailable */ } },
-};
 
 // --- URL state ---
 function readHash() {
@@ -49,7 +47,7 @@ function readHash() {
     const value = params.get(rule.key);
     if (rule.options.some((option) => option.value === value)) state.options[rule.key] = value;
   }
-  state.compare = PRESETS[params.get('cmp')] ? params.get('cmp') : '';
+  state.compare = Object.hasOwn(PRESETS, params.get('cmp') || '') ? params.get('cmp') : '';
   if (params.has('c')) state.live.concept = params.get('c');
   if (params.has('cascade')) state.live.cascade = params.get('cascade') !== '0';
 }
@@ -225,16 +223,6 @@ function renderScenario() {
 }
 
 // --- Any concept (live) ---
-function parseConcept(input) {
-  const text = input.trim().replace(/^.*#/, '');
-  const short = /^([A-Za-z0-9_-]+):([^/\s]+)$/.exec(text);
-  if (short) {
-    const name = Object.keys(SOURCES).find((key) => key.toLowerCase() === short[1].toLowerCase());
-    return name ? `${SOURCES[name]}concepts/${short[2]}/` : null;
-  }
-  const path = /^\/?(orgs|users)\/([^/]+)\/sources\/([^/]+)\/concepts\/([^/?#]+)/.exec(text.replace(/^https?:\/\/[^/]+/, ''));
-  return path ? `/${path[1]}/${path[2]}/sources/${path[3]}/concepts/${path[4]}/` : null;
-}
 
 async function runLive() {
   const live = state.live;
@@ -250,7 +238,6 @@ async function runLive() {
     renderScenario();
     return;
   }
-  storage.set(TOKEN_KEY, live.remember ? token : '');
   // Read with the settings as they are now; the checkbox can change while the requests run.
   const cascade = live.cascade;
   Object.assign(live, { error: '', progress: 'Starting…', graph: null, root: null });
@@ -278,10 +265,6 @@ async function runLive() {
 function renderLive() {
   const live = state.live;
   const tokenInput = h('input', { type: 'password', id: 'live-token', autocomplete: 'off', value: live.token, placeholder: 'Your OCL API token', oninput: (event) => { live.token = event.target.value; } });
-  const remember = h('input', { type: 'checkbox', id: 'live-remember', checked: live.remember, onchange: (event) => {
-    live.remember = event.target.checked;
-    storage.set(TOKEN_KEY, live.remember ? live.token.trim() : '');
-  } });
   const conceptInput = h('input', { type: 'text', id: 'live-concept', value: live.concept, placeholder: 'CIEL:163731', oninput: (event) => { live.concept = event.target.value; } });
   const cascade = h('input', { type: 'checkbox', id: 'live-cascade', checked: live.cascade, onchange: (event) => { live.cascade = event.target.checked; } });
 
@@ -289,13 +272,12 @@ function renderLive() {
     h('div', { class: 'scenario-head' },
       h('h2', {}, 'Any concept'),
       h('p', {}, 'Expand any CIEL or PIH concept under the options above, reading live from OCL. PIH and CIEL HEAD, as in the scenarios.')),
-    h('p', { class: 'notice' }, 'Uses your own OCL API token (from your OCL account settings). It goes only to api.openconceptlab.org; tick “Remember” to keep it in this browser.'),
+    h('p', { class: 'notice' }, 'Uses your own OCL API token (from your OCL account settings). The token stays in this page’s memory, goes only to api.openconceptlab.org, and is gone when you reload or close the page.'),
     h('form', { class: 'live-form', onsubmit: (event) => { event.preventDefault(); runLive(); } },
       h('label', { class: 'field', for: 'live-token' }, h('span', {}, 'OCL API token'), tokenInput),
       h('label', { class: 'field', for: 'live-concept' }, h('span', {}, 'Concept'), conceptInput),
       h('div', { class: 'actions' },
         h('label', { class: 'check', for: 'live-cascade' }, cascade, 'Cascade'),
-        h('label', { class: 'check', for: 'live-remember' }, remember, 'Remember token'),
         h('button', { type: 'submit', class: 'button', disabled: Boolean(live.progress) }, 'Expand'))),
   ];
   if (live.progress) parts.push(h('p', { class: 'notice', id: 'live-progress' }, live.progress));
@@ -325,8 +307,7 @@ function update() {
 
 async function start() {
   readHash();
-  state.live.token = storage.get(TOKEN_KEY);
-  state.live.remember = Boolean(state.live.token);
+  try { localStorage.removeItem(OLD_TOKEN_KEY); } catch { /* storage unavailable */ }
   if (window.matchMedia('(max-width: 600px)').matches) document.getElementById('rules').hidden = true;
   update();
   try {

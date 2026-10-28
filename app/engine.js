@@ -258,21 +258,25 @@ export function expand(graph, reference, options = {}) {
     if (o.cascade === 'stepwise' && original !== member && depth === 0) return referenced();
     if (o.cascade !== 'union') return own();
     const plan = own();
-    const covered = new Map(plan.map((step) => [now(step.mapping.to).url, step]));
-    const added = new Set();
+    const ownTargets = new Set(plan.map((step) => now(step.mapping.to).url));
+    const lead = new Map(plan.map((step) => [now(step.mapping.to).url, step])); // the step each child is visited from
+    const kept = new Set();
     for (const extra of [original, ...alsoFrom].filter((url) => url !== member)) {
       for (const mapping of structural(extra)) {
         const target = now(mapping.to).url;
-        const step = target && covered.get(target);
+        const step = target && lead.get(target);
         if (step) {
-          if (mapping.to !== step.mapping.to) step.alsoFrom.push(mapping.to);
-          continue;
+          // Another referenced concept behind the same child is cascaded with it, so the union continues below.
+          if (mapping.to !== step.mapping.to && !step.alsoFrom.includes(mapping.to)) step.alsoFrom.push(mapping.to);
+          if (ownTargets.has(target)) continue;
         }
-        // Keep each relationship the referenced side adds: a child can be both a set member and an answer.
+        // A child the replacement lacks keeps each relationship the referenced side gives it.
         const key = `${target || mapping.to} ${mapping.mapType}`;
-        if (added.has(key)) continue;
-        added.add(key);
-        plan.push({ mapping, alsoFrom: [] });
+        if (kept.has(key)) continue;
+        kept.add(key);
+        const added = { mapping, alsoFrom: [] };
+        plan.push(added);
+        if (target && !step) lead.set(target, added);
       }
     }
     return plan;
@@ -317,13 +321,15 @@ export function expand(graph, reference, options = {}) {
       const whose = owners.size > 1 ? 'both sides' : owners.has(resolution.url) ? 'the replacement' : 'the referenced concept';
       trace.push(`Rule 3: ${shortLabel(resolution.url)} gets the answers and set members of ${whose}.`);
     }
-    // A concept can be both an answer and a set member of its parent: one child, several edges.
+    // One child per concept in the expansion, with an edge per mapping: a concept can be both an answer and
+    // a set member, and two concepts can resolve to the same replacement.
     const childByTarget = new Map();
     for (const { mapping, alsoFrom: childAlso } of plan) {
-      let child = childByTarget.get(mapping.to);
+      const key = now(mapping.to).url || mapping.to;
+      let child = childByTarget.get(key);
       if (!child) {
         child = visit(mapping.to, depth + 1, childAlso);
-        childByTarget.set(mapping.to, child);
+        childByTarget.set(key, child);
         node.children.push(child);
       }
       const target = child.url;

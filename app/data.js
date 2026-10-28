@@ -1,9 +1,37 @@
 // Reads concepts and mappings from the OCL API into the graph the engine works on.
 // The snapshot script (scripts/snapshot.mjs) and the page's "Any concept" mode both use fetchGraph.
 
-import { STRUCTURAL_MAP_TYPES, EQUIVALENCY_MAP_TYPES, sourceOf, sourceName, codeOf } from './engine.js';
+import { STRUCTURAL_MAP_TYPES, EQUIVALENCY_MAP_TYPES, SOURCES, sourceOf, sourceName, codeOf } from './engine.js';
 
 export const DEFAULT_API = 'https://api.openconceptlab.org';
+
+// True when a browser would request exactly `path` on the API host. A path with "..", a backslash or encoded
+// dots, from a link or from OCL content, would otherwise reach another endpoint with the user's token.
+export function safePath(path, api = DEFAULT_API) {
+  try {
+    const target = new URL(path, api);
+    return path.startsWith('/') && target.origin === new URL(api).origin && `${target.pathname}${target.search}` === path;
+  } catch {
+    return false;
+  }
+}
+
+const CODE = /^(?!\.+$)[A-Za-z0-9._-]+$/;
+
+// "CIEL:163731", a concept URL, or a TBv3 link, as the URL of a CIEL or PIH concept; null otherwise.
+export function parseConcept(input) {
+  const text = input.trim().replace(/^.*#/, '').replace(/^https?:\/\/[^/]+/, '');
+  const short = /^([A-Za-z0-9_-]+):(.+)$/.exec(text);
+  const path = /^\/?(orgs|users)\/([^/]+)\/sources\/([^/]+)\/concepts\/([^/?#]+)\/?$/.exec(text);
+  let url = null;
+  if (short) {
+    const name = Object.keys(SOURCES).find((key) => key.toLowerCase() === short[1].toLowerCase());
+    if (name && CODE.test(short[2])) url = `${SOURCES[name]}concepts/${short[2]}/`;
+  } else if (path && CODE.test(path[4])) {
+    url = `/${path[1]}/${path[2]}/sources/${path[3]}/concepts/${path[4]}/`;
+  }
+  return url && Object.values(SOURCES).includes(sourceOf(url)) && safePath(url) ? url : null;
+}
 const KEPT_MAP_TYPES = [...STRUCTURAL_MAP_TYPES, ...EQUIVALENCY_MAP_TYPES];
 const PAGE_SIZE = 500;
 
@@ -50,6 +78,7 @@ export async function fetchGraph({
   if (token) headers.Authorization = `Token ${token}`;
 
   async function get(path) {
+    if (!safePath(path, api)) throw new Error(`Refused an unexpected API path: ${path}`);
     const response = await fetchImpl(`${api}${path}`, { headers });
     if (!response.ok) {
       let detail = '';
@@ -75,7 +104,7 @@ export async function fetchGraph({
   let done = 0;
 
   const enqueue = (url) => {
-    if (!url || queued.has(url) || !sources.includes(sourceOf(url))) return;
+    if (!url || queued.has(url) || !sources.includes(sourceOf(url)) || !safePath(url, api)) return;
     if (queued.size >= maxConcepts) throw new Error(`Stopped after ${maxConcepts} concepts; this cascade is too large for the prototype.`);
     queued.add(url);
     queue.push(url);
