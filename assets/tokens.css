@@ -1,0 +1,115 @@
+/* Copied from OpenConceptLab/ocl-design-system public/assets/tokens.css (commit 7c0d6a4). */
+/*
+ * OCL Design System — Design Tokens
+ *
+ * Point-in-time copy of the palette from oclweb3/src/common/colors.jsx
+ * (commit 8546c4b0, 2026-04-14). If the oclweb3 palette changes, update
+ * this file by hand. See docs/token-sync-options.md for why we chose
+ * one-time copy over a sync script or submodule.
+ *
+ * Naming mirrors the original: each palette exposes main/light/dark/
+ * contrastText plus the Material 3 tonal shades (10, 20, ..., 99).
+ */
+
+:root {
+  /* ---------- Primary ---------- */
+  --primary-main: #4836ff;
+  --primary-light: #4836ff;
+  --primary-dark: #c3c0ff;
+  --primary-contrast: #ffffff;
+  --primary-99: #fffbff;
+  --primary-95: #f2efff;
+  --primary-90: #e2dfff;
+  --primary-80: #c3c0ff;
+  --primary-70: #a4a1ff;
+  --primary-60: #8582ff;
+  --primary-50: #6760ff;
+  --primary-40: #4836ff;
+  --primary-30: #2d00e5;
+  --primary-20: #1d00a5;
+  --primary-10: #0f0069;
+
+  /* ---------- Secondary ---------- */
+  --secondary-main: #5e5c71;
+  --secondary-light: #5e5c71;
+  --secondary-dark: #c7c4dd;
+  --secondary-contrast: #ffffff;
+  --secondary-99: #fffbff;
+  --secondary-95: #f2efff;
+  --secondary-90: #e3e0f9;
+  --secondary-80: #c7c4dd;
+  --secondary-70: #aba9c1;
+  --secondary-60: #908ea5;
+  --secondary-50: #76758b;
+  --secondary-40: #5e5c71;
+  --secondary-30: #464559;
+  --secondary-20: #2f2e42;
+  --secondary-10: #1a1a2c;
+
+  /* ---------- Tertiary ---------- */
+  --tertiary-main: #7a5368;
+  --tertiary-light: #7a5368;
+  --tertiary-dark: #eab9d1;
+  --tertiary-contrast: #ffffff;
+  --tertiary-99: #fffbff;
+  --tertiary-95: #ffecf3;
+  --tertiary-90: #ffd8ea;
+  --tertiary-80: #eab9d1;
+  --tertiary-70: #cd9eb6;
+  --tertiary-60: #b0849b;
+  --tertiary-50: #956b81;
+  --tertiary-40: #7a5368;
+  --tertiary-30: #603c50;
+  --tertiary-20: #472639;
+  --tertiary-10: #2f1123;
+
+  /* ---------- Surface ---------- */
+  --surface-main: #fcf8fd;
+  --surface-light: #787680;
+  --surface-dark: #1c1b1f;
+  --surface-contrast: #47464f;
+  --surface-n90: #e5e1e6;
+  --surface-n92: #ebe7ec;
+  --surface-n94: #f0edf1;
+  --surface-n96: #f6f2f7;
+  --surface-nv80: #c8c5d0;
+  --surface-s90: #e3e0f9;
+
+  /* ---------- Error ---------- */
+  --error-main: #ba1a1a;
+  --error-light: #ba1a1a;
+  --error-dark: #ffb4ab;
+  --error-contrast: #ffffff;
+  --error-95: #ffedea;
+
+  /* ---------- Neutral ---------- */
+  --neutral-70: #adaaaf;
+  --neutral-60: #929094;
+
+  /* ---------- Named grays (from colors.jsx constants) ---------- */
+  --text-gray: #47464f;
+  --bg-gray: #f6f2f7;
+  --light-gray: #e5e1e6;
+  --very-light-gray: #5e5c71;
+
+  /* ---------- Diff highlighting ---------- */
+  --diff-bg-highlight: #fffbdd;
+  --diff-highlight-red: #fdb8c0;
+  --diff-bg-green: #e6ffed;
+  --diff-highlight-green: #acf2bd;
+
+  /* ---------- Semantic aliases for the site itself ---------- */
+  --bg-default: var(--surface-main);
+  --bg-subtle: var(--surface-n96);
+  --bg-panel: #ffffff;
+  --text-primary: var(--text-gray);
+  --text-secondary: var(--secondary-main);
+  --text-muted: var(--neutral-60);
+  --border: var(--surface-nv80);
+  --border-subtle: var(--surface-n90);
+  --accent: var(--primary-main);
+  --accent-subtle: var(--primary-95);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+}

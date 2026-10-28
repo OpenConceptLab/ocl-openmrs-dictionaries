@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equivalency Rules Prototype</title>
+  <meta name="description" content="Try each equivalency rule's options on the OpenMRS dictionary scenarios and see how OCL would expand them.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234836ff'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='700' fill='white' text-anchor='middle'%3E%E2%89%A1%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="app/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div>
+        <p class="eyebrow">OCL · OpenMRS dictionaries</p>
+        <h1>Equivalency rules prototype</h1>
+      </div>
+      <nav class="site-links" aria-label="Project links">
+        <a href="https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki">Wiki</a>
+        <a href="https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki/Rules">Rules</a>
+        <a href="https://github.com/OpenConceptLab/ocl_issues/issues/2972">Ticket</a>
+        <a href="https://github.com/OpenConceptLab/ocl-openmrs-dictionaries">Source</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="controls" id="controls">
+    <div class="controls__bar">
+      <label class="field field--inline">
+        <span>Options</span>
+        <select id="preset"></select>
+      </label>
+      <label class="field field--inline">
+        <span>Compare with</span>
+        <select id="compare"></select>
+      </label>
+      <button type="button" class="button button--text" id="toggle-rules" aria-expanded="true" aria-controls="rules">Rules</button>
+    </div>
+    <div class="controls__rules" id="rules"></div>
+  </div>
+
+  <main class="page">
+    <nav class="tabs" id="tabs" aria-label="Scenarios"></nav>
+    <section id="scenario" aria-live="polite"></section>
+  </main>
+
+  <footer class="site-footer" id="footer"></footer>
+
+  <noscript><p class="page">This prototype needs JavaScript.</p></noscript>
+  <script type="module" src="app/main.js"></script>
+</body>
+</html>

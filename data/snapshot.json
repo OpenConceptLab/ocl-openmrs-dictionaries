@@ -1,0 +1,2740 @@
+{
+ "generated": "2026-10-28",
+ "api": "https://api.openconceptlab.org",
+ "repoVersions": "HEAD",
+ "sources": [
+  "/orgs/PIH/sources/PIH/",
+  "/orgs/CIEL/sources/CIEL/"
+ ],
+ "concepts": {
+  "/orgs/CIEL/sources/CIEL/concepts/1065/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1065/",
+   "code": "1065",
+   "name": "Yes",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1066/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1066/",
+   "code": "1066",
+   "name": "No",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1067/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1067/",
+   "code": "1067",
+   "name": "Unknown",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1090/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1090/",
+   "code": "1090",
+   "name": "Never",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1138/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1138/",
+   "code": "1138",
+   "name": "Indeterminate",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/120759/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/120759/",
+   "code": "120759",
+   "name": "Cestode infection",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/127133/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/127133/",
+   "code": "127133",
+   "name": "Schistosoma mansonii infection",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1284/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1284/",
+   "code": "1284",
+   "name": "Problem list",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1362/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1362/",
+   "code": "1362",
+   "name": "One plus",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1363/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1363/",
+   "code": "1363",
+   "name": "Two plus",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1364/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1364/",
+   "code": "1364",
+   "name": "Three plus",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1365/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1365/",
+   "code": "1365",
+   "name": "Four plus",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/137329/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/137329/",
+   "code": "137329",
+   "name": "Infection due to Entamoeba histolytica",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/137504/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/137504/",
+   "code": "137504",
+   "name": "Infection by Ascaris lumbricoides",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/148882/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/148882/",
+   "code": "148882",
+   "name": "Ancylostomiasis due to Ancylostoma duodenale",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1498/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1498/",
+   "code": "1498",
+   "name": "Mild",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1499/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1499/",
+   "code": "1499",
+   "name": "Moderate",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1500/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1500/",
+   "code": "1500",
+   "name": "Severe",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159362/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "code": "159362",
+   "name": "Fecal occult blood test",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159392/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159392/",
+   "code": "159392",
+   "name": "Confirmed diagnosis",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159393/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159393/",
+   "code": "159393",
+   "name": "Presumed diagnosis",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159394/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "code": "159394",
+   "name": "Diagnosis certainty",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159450/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159450/",
+   "code": "159450",
+   "name": "Currently",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159451/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159451/",
+   "code": "159451",
+   "name": "Never",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": true
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159452/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159452/",
+   "code": "159452",
+   "name": "In the past",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159943/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159943/",
+   "code": "159943",
+   "name": "Primary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159944/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159944/",
+   "code": "159944",
+   "name": "Secondary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159945/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159945/",
+   "code": "159945",
+   "name": "Tertiary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159946/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "code": "159946",
+   "name": "Diagnosis order",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159947/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "code": "159947",
+   "name": "Visit diagnoses",
+   "class": "ConvSet",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/159948/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/159948/",
+   "code": "159948",
+   "name": "Diagnosis date",
+   "class": "Question",
+   "datatype": "Date",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/160033/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/160033/",
+   "code": "160033",
+   "name": "Relapse",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/160106/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/160106/",
+   "code": "160106",
+   "name": "To be specified",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/160249/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/160249/",
+   "code": "160249",
+   "name": "Provisional diagnosis",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/160250/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/160250/",
+   "code": "160250",
+   "name": "Final diagnosis",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161447/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161447/",
+   "code": "161447",
+   "name": "Stool microscopy with concentration",
+   "class": "Test",
+   "datatype": "Text",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161448/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161448/",
+   "code": "161448",
+   "name": "Kinyoun's stain for coccidians",
+   "class": "Test",
+   "datatype": "Text",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161449/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161449/",
+   "code": "161449",
+   "name": "Stool test for reducing substance",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161450/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "code": "161450",
+   "name": "Stool fat test, semi-quantitative",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161451/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "code": "161451",
+   "name": "Stool test",
+   "class": "LabSet",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161557/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161557/",
+   "code": "161557",
+   "name": "Partner HIV tested",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161602/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161602/",
+   "code": "161602",
+   "name": "Diagnosis or problem, non-coded",
+   "class": "Diagnosis",
+   "datatype": "Text",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161636/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161636/",
+   "code": "161636",
+   "name": "Active status",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/161908/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/161908/",
+   "code": "161908",
+   "name": "Patient-reported",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/162819/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/162819/",
+   "code": "162819",
+   "name": "Fatal",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/162820/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "code": "162820",
+   "name": "Problem severity",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/162821/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/162821/",
+   "code": "162821",
+   "name": "Mild to moderate",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/162822/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/162822/",
+   "code": "162822",
+   "name": "Moderate to severe",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/163051/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/163051/",
+   "code": "163051",
+   "name": "In remission",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/163139/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/163139/",
+   "code": "163139",
+   "name": "Quartenary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/163731/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "code": "163731",
+   "name": "Tobacco use status",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/164928/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/164928/",
+   "code": "164928",
+   "name": "Inactive status",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/165267/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/165267/",
+   "code": "165267",
+   "name": "Recently quit using tobacco",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/165870/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/165870/",
+   "code": "165870",
+   "name": "Patient condition resolved",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/165908/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "code": "165908",
+   "name": "Condition clinical status",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/166398/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/166398/",
+   "code": "166398",
+   "name": "Cyst of entamoeba",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1688/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1688/",
+   "code": "1688",
+   "name": "Recurrence of disease",
+   "class": "Misc",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/1874/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/1874/",
+   "code": "1874",
+   "name": "Trace",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/304/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "code": "304",
+   "name": "Stool exam",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/5424/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/5424/",
+   "code": "5424",
+   "name": "Other antiretroviral drug",
+   "class": "Drug",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/5622/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/5622/",
+   "code": "5622",
+   "name": "Other",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/664/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "code": "664",
+   "name": "Negative",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/703/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/703/",
+   "code": "703",
+   "name": "Positive",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/709/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/709/",
+   "code": "709",
+   "name": "Entamoeba histolytica",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/CIEL/sources/CIEL/concepts/713/": {
+   "url": "/orgs/CIEL/sources/CIEL/concepts/713/",
+   "code": "713",
+   "name": "Giardia lamblia",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/10513/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/10513/",
+   "code": "10513",
+   "name": "In remission",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1065/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1065/",
+   "code": "1065",
+   "name": "Yes",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1066/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1066/",
+   "code": "1066",
+   "name": "No",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1067/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1067/",
+   "code": "1067",
+   "name": "Unknown",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1090/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1090/",
+   "code": "1090",
+   "name": "Never",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1138/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1138/",
+   "code": "1138",
+   "name": "Indeterminate",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/11432/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/11432/",
+   "code": "11432",
+   "name": "++++",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12261/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12261/",
+   "code": "12261",
+   "name": "Schistosoma Mansoni Infection",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12264/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12264/",
+   "code": "12264",
+   "name": "Infection by Ascaris Lumbricoides",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12266/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12266/",
+   "code": "12266",
+   "name": "Cestode Infection",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12268/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12268/",
+   "code": "12268",
+   "name": "Fecal occult blood test",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12269/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12269/",
+   "code": "12269",
+   "name": "Ancylostomiasis due to Ancylostoma Duodenale",
+   "class": "Diagnosis",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12270/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12270/",
+   "code": "12270",
+   "name": "1+",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12271/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12271/",
+   "code": "12271",
+   "name": "Trace",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12358/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12358/",
+   "code": "12358",
+   "name": "Inactive status",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/12957/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/12957/",
+   "code": "12957",
+   "name": "Patient condition resolved",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13221/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13221/",
+   "code": "13221",
+   "name": "Active status",
+   "class": "State",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13352/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13352/",
+   "code": "13352",
+   "name": "E histolytica",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13353/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13353/",
+   "code": "13353",
+   "name": "Giardia lamblia",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13363/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13363/",
+   "code": "13363",
+   "name": "No ova, cysts, and parasites",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13384/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13384/",
+   "code": "13384",
+   "name": "Cyst of entamoeba",
+   "class": "Organism",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1345/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1345/",
+   "code": "1345",
+   "name": "Confirmed",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1346/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1346/",
+   "code": "1346",
+   "name": "Presumed",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13724/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13724/",
+   "code": "13724",
+   "name": "Recurrence of disease",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/13725/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "code": "13725",
+   "name": "Condition clinical status",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1379/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1379/",
+   "code": "1379",
+   "name": "Diagnosis certainty",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1408/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1408/",
+   "code": "1408",
+   "name": "++",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1409/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1409/",
+   "code": "1409",
+   "name": "+++",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1548/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1548/",
+   "code": "1548",
+   "name": "In the past",
+   "class": "Finding",
+   "datatype": "Boolean",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1550/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1550/",
+   "code": "1550",
+   "name": "Currently",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1900/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1900/",
+   "code": "1900",
+   "name": "Moderate",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1901/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1901/",
+   "code": "1901",
+   "name": "Mild",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/1903/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/1903/",
+   "code": "1903",
+   "name": "Severe",
+   "class": "Finding",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/2545/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "code": "2545",
+   "name": "History of tobacco use",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/304/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/304/",
+   "code": "304",
+   "name": "Stool microscopy",
+   "class": "Test",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/3064/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/3064/",
+   "code": "3064",
+   "name": "Diagnosis",
+   "class": "Question",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/5424/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/5424/",
+   "code": "5424",
+   "name": "Other antiretroviral drug",
+   "class": "Drug",
+   "datatype": "Text",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/5622/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/5622/",
+   "code": "5622",
+   "name": "Other",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/6349/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/6349/",
+   "code": "6349",
+   "name": "Relapse",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/664/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/664/",
+   "code": "664",
+   "name": "Negative",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/703/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/703/",
+   "code": "703",
+   "name": "Positive",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7059/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7059/",
+   "code": "7059",
+   "name": "Fatal",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7416/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7416/",
+   "code": "7416",
+   "name": "Diagnosis or problem, non-coded",
+   "class": "Question",
+   "datatype": "Text",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7534/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7534/",
+   "code": "7534",
+   "name": "Primary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7535/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7535/",
+   "code": "7535",
+   "name": "Secondary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7536/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7536/",
+   "code": "7536",
+   "name": "Tertiary",
+   "class": "Misc",
+   "datatype": "N/A",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7537/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "code": "7537",
+   "name": "Diagnosis order",
+   "class": "Finding",
+   "datatype": "Coded",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7538/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7538/",
+   "code": "7538",
+   "name": "Diagnosis date",
+   "class": "Question",
+   "datatype": "Date",
+   "retired": false
+  },
+  "/orgs/PIH/sources/PIH/concepts/7539/": {
+   "url": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "code": "7539",
+   "name": "Visit Diagnoses",
+   "class": "ConvSet",
+   "datatype": "N/A",
+   "retired": false
+  }
+ },
+ "mappings": [
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/11355/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/5424/",
+   "to": "/orgs/PIH/sources/PIH/concepts/5622/",
+   "toCode": "5622",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1320/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/120759/",
+   "toCode": "120759",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1356
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/13914/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/5622/",
+   "to": "/orgs/PIH/sources/PIH/concepts/5622/",
+   "toCode": "5622",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1501/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/148882/",
+   "toCode": "148882",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1358
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1731/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/137504/",
+   "toCode": "137504",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1357
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1741/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/127133/",
+   "toCode": "127133",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1359
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1827/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/137329/",
+   "toCode": "137329",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1361
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/1831/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/5622/",
+   "toCode": "5622",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1360
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/2286/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/703/",
+   "to": "/orgs/PIH/sources/PIH/concepts/703/",
+   "toCode": "703",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/2290/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "to": "/orgs/PIH/sources/PIH/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/283091/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159393/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1346/",
+   "toCode": "1346",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/283306/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1284/",
+   "toCode": "1284",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 0
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/284423/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/703/",
+   "toCode": "703",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2165
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/284458/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/160250/",
+   "toCode": "160250",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 3474
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/284763/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1138/",
+   "toCode": "1138",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2163
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/288690/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/160249/",
+   "toCode": "160249",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 3473
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/288831/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/163139/",
+   "toCode": "163139",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5539
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/289775/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159452/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1548/",
+   "toCode": "1548",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/292741/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "toCode": "159946",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 3
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/293585/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161602/",
+   "toCode": "161602",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/294405/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159943/",
+   "toCode": "159943",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2981
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/298824/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161908/",
+   "toCode": "161908",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4716
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/300199/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161449/",
+   "toCode": "161449",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/301548/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159393/",
+   "toCode": "159393",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2211
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/303415/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/165870/",
+   "toCode": "165870",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7276
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/303731/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161557/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1067/",
+   "toCode": "1067",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4642
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/304184/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159392/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1345/",
+   "toCode": "1345",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/305005/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161449/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/703/",
+   "toCode": "703",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4509
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/306578/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159948/",
+   "toCode": "159948",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/307101/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161448/",
+   "toCode": "161448",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/307269/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1364/",
+   "toCode": "1364",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4514
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/308401/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1499/",
+   "toCode": "1499",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/309209/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159944/",
+   "toCode": "159944",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2980
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/309238/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4513
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/309872/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "toCode": "159362",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 3
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/311470/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159450/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1550/",
+   "toCode": "1550",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/311748/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161449/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4508
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/312062/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159392/",
+   "toCode": "159392",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2212
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/312446/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159451/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1090/",
+   "toCode": "1090",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/312829/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159945/",
+   "toCode": "159945",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2982
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/312839/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2164
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/313968/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/160106/",
+   "to": "/orgs/PIH/sources/PIH/concepts/5424/",
+   "toCode": "5424",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/314047/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "toCode": "159394",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 2
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/314285/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1500/",
+   "toCode": "1500",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5236
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/314549/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162821/",
+   "toCode": "162821",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 0
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/315359/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1498/",
+   "toCode": "1498",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5235
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/315473/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1362/",
+   "toCode": "1362",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4515
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/316109/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1498/",
+   "toCode": "1498",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/316565/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "toCode": "162820",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/316900/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1363/",
+   "toCode": "1363",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4511
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/317538/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159450/",
+   "toCode": "159450",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 6017
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/318274/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1090/",
+   "toCode": "1090",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 6015
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/319340/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161447/",
+   "toCode": "161447",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 1
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/320349/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161557/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1065/",
+   "toCode": "1065",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4641
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/320980/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "toCode": "161450",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/322665/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162821/",
+   "toCode": "162821",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5237
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/323136/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162819/",
+   "toCode": "162819",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5233
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/324054/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1874/",
+   "toCode": "1874",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4512
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/324602/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161450/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1365/",
+   "toCode": "1365",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4510
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/324625/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/164928/",
+   "toCode": "164928",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7274
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/325432/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161636/",
+   "toCode": "161636",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7275
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/326003/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162819/",
+   "toCode": "162819",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/326095/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161602/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7416/",
+   "toCode": "7416",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/326834/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161451/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "toCode": "304",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 0
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/327341/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162822/",
+   "toCode": "162822",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5238
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/327644/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/161557/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1066/",
+   "toCode": "1066",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4640
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/327886/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1500/",
+   "toCode": "1500",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 4
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/329336/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1499/",
+   "toCode": "1499",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 5234
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/331295/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/162820/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162822/",
+   "toCode": "162822",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 3
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/331795/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/160033/",
+   "toCode": "160033",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7278
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/332505/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159452/",
+   "toCode": "159452",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 6016
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/333246/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/165267/",
+   "toCode": "165267",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 6889
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/334758/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/163051/",
+   "toCode": "163051",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7279
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/334915/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1688/",
+   "toCode": "1688",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": 7277
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/3812/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1066/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1066/",
+   "toCode": "1066",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/3918/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1067/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1067/",
+   "toCode": "1067",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/4435/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1065/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1065/",
+   "toCode": "1065",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/5728/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1090/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1090/",
+   "toCode": "1090",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/6982/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1500/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1903/",
+   "toCode": "1903",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/7738/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1499/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1900/",
+   "toCode": "1900",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/7798/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1498/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1901/",
+   "toCode": "1901",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/7997/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1363/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1408/",
+   "toCode": "1408",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/8554/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/1364/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1409/",
+   "toCode": "1409",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/CIEL/sources/CIEL/mappings/9811/",
+   "holder": "/orgs/CIEL/sources/CIEL/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/CIEL/sources/CIEL/concepts/5424/",
+   "to": "/orgs/PIH/sources/PIH/concepts/5424/",
+   "toCode": "5424",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/12/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1065/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1065/",
+   "toCode": "1065",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/12588/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13221/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161636/",
+   "toCode": "161636",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/14612/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/10513/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/163051/",
+   "toCode": "163051",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/16909/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12268/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159362/",
+   "toCode": "159362",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/16925/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/12268/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1138/",
+   "toCode": "1138",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 2163
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/16931/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/12268/",
+   "to": "/orgs/PIH/sources/PIH/concepts/703/",
+   "toCode": "703",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 2165
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/16937/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/12268/",
+   "to": "/orgs/PIH/sources/PIH/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 2164
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22081/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12264/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/137504/",
+   "toCode": "137504",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22106/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12266/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/120759/",
+   "toCode": "120759",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22146/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13353/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/713/",
+   "toCode": "713",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22165/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12261/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/127133/",
+   "toCode": "127133",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22188/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12269/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/148882/",
+   "toCode": "148882",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22211/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13384/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/166398/",
+   "toCode": "166398",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22229/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13352/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/709/",
+   "toCode": "709",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22272/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/304/",
+   "toCode": "304",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22286/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12264/",
+   "toCode": "12264",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 4
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22290/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12266/",
+   "toCode": "12266",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 1
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22295/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13353/",
+   "toCode": "13353",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22300/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12261/",
+   "toCode": "12261",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 6
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22305/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13363/",
+   "toCode": "13363",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 12
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22309/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12269/",
+   "toCode": "12269",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 5
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22313/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13384/",
+   "toCode": "13384",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 10
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22318/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/5622/",
+   "toCode": "5622",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 13
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/22323/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/304/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13352/",
+   "toCode": "13352",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 2
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2347/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7059/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/162819/",
+   "toCode": "162819",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2379/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1903/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1500/",
+   "toCode": "1500",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2424/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1900/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1499/",
+   "toCode": "1499",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2434/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1901/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1498/",
+   "toCode": "1498",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25663/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7416/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/161602/",
+   "toCode": "161602",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25731/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7536/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159945/",
+   "toCode": "159945",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25736/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159946/",
+   "toCode": "159946",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25757/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7534/",
+   "toCode": "7534",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 8450
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25760/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7535/",
+   "toCode": "7535",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 8451
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25765/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7536/",
+   "toCode": "7536",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 8452
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25775/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12358/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/164928/",
+   "toCode": "164928",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25795/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12957/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/165870/",
+   "toCode": "165870",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25800/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/6349/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/160033/",
+   "toCode": "160033",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25824/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13724/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1688/",
+   "toCode": "1688",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25831/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/165908/",
+   "toCode": "165908",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25842/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12358/",
+   "toCode": "12358",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7274
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25847/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/12957/",
+   "toCode": "12957",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7276
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25851/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/10513/",
+   "toCode": "10513",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7279
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25856/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/6349/",
+   "toCode": "6349",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7278
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25861/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13221/",
+   "toCode": "13221",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7275
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25863/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13724/",
+   "toCode": "13724",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 7277
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25878/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159947/",
+   "toCode": "159947",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25894/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/3064/",
+   "toCode": "3064",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 0
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25898/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7537/",
+   "toCode": "7537",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25903/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/13725/",
+   "toCode": "13725",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 5
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25906/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7538/",
+   "toCode": "7538",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 4
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25909/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1379/",
+   "toCode": "1379",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 2
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/25914/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "CONCEPT-SET",
+   "from": "/orgs/PIH/sources/PIH/concepts/7539/",
+   "to": "/orgs/PIH/sources/PIH/concepts/7416/",
+   "toCode": "7416",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 1
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2842/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1346/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159393/",
+   "toCode": "159393",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2856/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1345/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159392/",
+   "toCode": "159392",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2894/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1379/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159394/",
+   "toCode": "159394",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2903/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/1379/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1346/",
+   "toCode": "1346",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 958
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2907/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/1379/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1345/",
+   "toCode": "1345",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 957
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2918/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/3064/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1284/",
+   "toCode": "1284",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/2964/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/664/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/664/",
+   "toCode": "664",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/324/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1067/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1067/",
+   "toCode": "1067",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/3439/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/703/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/703/",
+   "toCode": "703",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/3459/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1138/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1138/",
+   "toCode": "1138",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/35439/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1409/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1364/",
+   "toCode": "1364",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/35494/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1408/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1363/",
+   "toCode": "1363",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/35510/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12270/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1362/",
+   "toCode": "1362",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/44/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1066/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1066/",
+   "toCode": "1066",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/4835/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7538/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159948/",
+   "toCode": "159948",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/5088/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1548/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159452/",
+   "toCode": "159452",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/5105/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1090/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1090/",
+   "toCode": "1090",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/5127/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/1550/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159450/",
+   "toCode": "159450",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/6306/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/163731/",
+   "toCode": "163731",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/6321/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1090/",
+   "toCode": "1090",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3212
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/6325/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1548/",
+   "toCode": "1548",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3209
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/6332/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1550/",
+   "toCode": "1550",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3210
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/6336/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "Q-AND-A",
+   "from": "/orgs/PIH/sources/PIH/concepts/2545/",
+   "to": "/orgs/PIH/sources/PIH/concepts/1067/",
+   "toCode": "1067",
+   "toSource": "/orgs/PIH/sources/PIH/",
+   "retired": false,
+   "sortWeight": 3211
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/7474/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/5424/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/5424/",
+   "toCode": "5424",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/9026/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7535/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159944/",
+   "toCode": "159944",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/9048/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/7534/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/159943/",
+   "toCode": "159943",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/937/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/5622/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/5622/",
+   "toCode": "5622",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/9651/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/12271/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1874/",
+   "toCode": "1874",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  },
+  {
+   "url": "/orgs/PIH/sources/PIH/mappings/9664/",
+   "holder": "/orgs/PIH/sources/PIH/",
+   "mapType": "SAME-AS",
+   "from": "/orgs/PIH/sources/PIH/concepts/11432/",
+   "to": "/orgs/CIEL/sources/CIEL/concepts/1365/",
+   "toCode": "1365",
+   "toSource": "/orgs/CIEL/sources/CIEL/",
+   "retired": false,
+   "sortWeight": null
+  }
+ ]
+}
