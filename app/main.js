@@ -13,7 +13,8 @@ const state = {
   scenario: SCENARIOS[0].id,
   options: { ...DEFAULT_OPTIONS },
   compare: '',
-  live: { concept: '', cascade: true, graph: null, root: null, error: '', progress: '' },
+  // The token stays in page memory between renders; it's written to localStorage only while "Remember" is ticked.
+  live: { concept: '', cascade: true, token: '', remember: false, graph: null, root: null, fetchedCascade: true, error: '', progress: '' },
 };
 let snapshot = null;
 let snapshotInfo = null;
@@ -248,7 +249,7 @@ function parseConcept(input) {
   return path ? `/${path[1]}/${path[2]}/sources/${path[3]}/concepts/${path[4]}/` : null;
 }
 
-async function runLive(tokenInput, remember) {
+async function runLive() {
   const live = state.live;
   const root = parseConcept(live.concept);
   if (!root || !Object.values(SOURCES).includes(sourceOf(root))) {
@@ -256,13 +257,13 @@ async function runLive(tokenInput, remember) {
     renderScenario();
     return;
   }
-  const token = tokenInput.trim();
+  const token = live.token.trim();
   if (!token) {
     live.error = 'Paste your OCL API token first. The OCL API needs one for every request.';
     renderScenario();
     return;
   }
-  storage.set(TOKEN_KEY, remember ? token : '');
+  storage.set(TOKEN_KEY, live.remember ? token : '');
   Object.assign(live, { error: '', progress: 'Starting…', graph: null, root: null });
   renderScenario();
   try {
@@ -274,7 +275,7 @@ async function runLive(tokenInput, remember) {
         if (progress) progress.textContent = live.progress;
       },
     });
-    Object.assign(live, { graph: indexGraph(graph), root, progress: '' });
+    Object.assign(live, { graph: indexGraph(graph), root, fetchedCascade: live.cascade, progress: '' });
   } catch (error) {
     live.progress = '';
     live.error = error instanceof ApiError && (error.status === 401 || error.status === 403)
@@ -287,11 +288,14 @@ async function runLive(tokenInput, remember) {
 
 function renderLive() {
   const live = state.live;
-  const tokenInput = h('input', { type: 'password', id: 'live-token', autocomplete: 'off', value: storage.get(TOKEN_KEY), placeholder: 'Your OCL API token' });
-  const remember = h('input', { type: 'checkbox', id: 'live-remember', checked: Boolean(storage.get(TOKEN_KEY)) });
+  const tokenInput = h('input', { type: 'password', id: 'live-token', autocomplete: 'off', value: live.token, placeholder: 'Your OCL API token', oninput: (event) => { live.token = event.target.value; } });
+  const remember = h('input', { type: 'checkbox', id: 'live-remember', checked: live.remember, onchange: (event) => {
+    live.remember = event.target.checked;
+    storage.set(TOKEN_KEY, live.remember ? live.token.trim() : '');
+  } });
   const conceptInput = h('input', { type: 'text', id: 'live-concept', value: live.concept, placeholder: 'CIEL:163731', oninput: (event) => { live.concept = event.target.value; } });
   const cascade = h('input', { type: 'checkbox', id: 'live-cascade', checked: live.cascade, onchange: (event) => { live.cascade = event.target.checked; } });
-  const go = () => runLive(tokenInput.value, remember.checked);
+  const go = () => runLive();
 
   const parts = [
     h('div', { class: 'scenario-head' },
@@ -308,7 +312,11 @@ function renderLive() {
   ];
   if (live.progress) parts.push(h('p', { class: 'notice', id: 'live-progress' }, live.progress));
   if (live.error) parts.push(h('p', { class: 'notice notice--error', role: 'alert' }, live.error));
-  if (live.graph && live.root) parts.push(renderResults(live.graph, { concept: live.root, cascade: live.cascade }));
+  if (live.graph && live.root) {
+    // Render with the cascade setting the data was read with; a changed checkbox needs a new read.
+    if (live.cascade !== live.fetchedCascade) parts.push(h('p', { class: 'notice' }, 'Cascade changed: press Expand to read the concept again.'));
+    parts.push(renderResults(live.graph, { concept: live.root, cascade: live.fetchedCascade }));
+  }
   return parts;
 }
 
@@ -329,6 +337,8 @@ function update() {
 
 async function start() {
   readHash();
+  state.live.token = storage.get(TOKEN_KEY);
+  state.live.remember = Boolean(state.live.token);
   if (window.matchMedia('(max-width: 600px)').matches) document.getElementById('rules').hidden = true;
   update();
   try {

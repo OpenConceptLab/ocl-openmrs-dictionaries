@@ -164,9 +164,9 @@ export function expand(graph, reference, options = {}, context = {}) {
   const isRetired = (url) => Boolean(g.concepts[url] && g.concepts[url].retired);
   const countRetired = o.retired === 'count';
 
-  const resolverFor = (order) => makeResolver(order.split('>').map((name) => SOURCES[name]));
+  const resolverFor = (order, substitution) => makeResolver(order.split('>').map((name) => SOURCES[name]), substitution);
 
-  function makeResolver(ranked) {
+  function makeResolver(ranked, substitution) {
     const rank = (url) => {
       const index = ranked.indexOf(sourceOf(url));
       return index === -1 ? Infinity : index;
@@ -181,7 +181,7 @@ export function expand(graph, reference, options = {}, context = {}) {
         const otherSource = sourceOf(other);
         if (!other || otherSource === own || rank(other) === Infinity) return;
         if (mapping.retired && !countRetired) return;
-        if (isRetired(other) && !countRetired) return;
+        if ((isRetired(other) || isRetired(url)) && !countRetired) return;
         const higher = rank(other) < rank(url) ? otherSource : own;
         const stored = mapping.holder;
         if (o.direction === 'higher' && stored !== higher) return;
@@ -201,7 +201,7 @@ export function expand(graph, reference, options = {}, context = {}) {
     function resolve(url) {
       if (memo.has(url)) return memo.get(url);
       let result = { url, replaced: false };
-      if (o.substitution !== 'off') {
+      if (substitution !== 'off') {
         let candidates = equivalents(url).filter((c) => rank(c.url) < rank(url));
         if (o.lookIn === 'collection') candidates = candidates.filter((c) => collection.has(c.url));
         if (candidates.length) {
@@ -216,7 +216,7 @@ export function expand(graph, reference, options = {}, context = {}) {
           }
           if (!chosen) {
             result = { url, replaced: false, flags };
-          } else if (o.substitution === 'omit') {
+          } else if (substitution === 'omit') {
             result = { url: null, omitted: url, via: chosen.mapping, equivalent: chosen.url, flags };
           } else {
             result = { url: chosen.url, replaced: true, original: url, via: chosen.mapping, flags };
@@ -230,8 +230,10 @@ export function expand(graph, reference, options = {}, context = {}) {
     return { resolve, rank };
   }
 
-  const now = resolverFor(o.ranked);
-  const whenAdded = resolverFor(reference.rankedWhenAdded || 'PIH>CIEL');
+  const now = resolverFor(o.ranked, o.substitution);
+  // Rules 5 and 6 act when the reference is added, so they need the equivalent itself even when the
+  // expansion leaves such concepts out.
+  const whenAdded = resolverFor(reference.rankedWhenAdded || 'PIH>CIEL', o.substitution === 'off' ? 'off' : 'replace');
 
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
   const atAdd = whenAdded.resolve(reference.concept);

@@ -94,6 +94,23 @@ test('Rule 6: blocking the reference adds nothing', () => {
   assert.equal(result.adding.kind, 'block');
 });
 
+test('Rules 5 and 6 still see the equivalent when the expansion leaves such concepts out', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '5');
+  const omit = { ...PRESETS.draft.options, substitution: 'omit' };
+  const rewritten = expand(graph, scenario.reference, { ...omit, reference: 'rewrite' });
+  assert.equal(shortLabel(rewritten.reference.stored), 'PIH:1065');
+  assert.deepEqual(rewritten.members.map((m) => shortLabel(m.url)), ['PIH:1065']);
+  assert.equal(expand(graph, scenario.reference, { ...omit, adding: 'block' }).adding.kind, 'block');
+  assert.equal(expand(graph, scenario.reference, omit).members.length, 0);
+});
+
+test('Rule 1: a retired original has no equivalents unless retired concepts are counted', () => {
+  const g = made([sameAs('PIH', concept('PIH', 10), concept('CIEL', 1))]);
+  g.concepts[concept('CIEL', 1)].retired = true;
+  assert.equal(shortLabel(resultFor(g, { retired: 'ignore' }).members[0].url), 'CIEL:1');
+  assert.equal(shortLabel(resultFor(g, { retired: 'count' }).members[0].url), 'PIH:10');
+});
+
 test('Ranked list swapped: CIEL ranks first, so a CIEL reference expands as pure CIEL', () => {
   const scenario = SCENARIOS.find((s) => s.id === '3');
   const result = expand(graph, scenario.reference, { ...PRESETS.draft.options, ranked: 'CIEL>PIH' });
