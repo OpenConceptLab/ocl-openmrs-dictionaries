@@ -300,9 +300,9 @@ export function expand(graph, reference, options = {}, context = {}) {
     }
   }
 
-  function visit(original, depth, edge, alsoFrom = []) {
+  function visit(original, depth, alsoFrom = []) {
     const resolution = now.resolve(original);
-    const node = { original, url: resolution.url, resolution, edge, children: [] };
+    const node = { original, url: resolution.url, resolution, edges: [], children: [] };
     if (!resolution.url) {
       node.status = 'omitted';
       trace.push(`Rule 2: ${shortLabel(original)} is left out (its equivalent ${shortLabel(resolution.equivalent)} ranks higher), and nothing under it is cascaded.`);
@@ -322,25 +322,31 @@ export function expand(graph, reference, options = {}, context = {}) {
       const whose = owners.size > 1 ? 'both sides' : owners.has(resolution.url) ? 'the replacement' : 'the referenced concept';
       trace.push(`Rule 3: ${shortLabel(resolution.url)} gets the answers and set members of ${whose}.`);
     }
+    // A concept can be both an answer and a set member of its parent: one child, several edges.
+    const childByTarget = new Map();
     for (const { mapping, alsoFrom: childAlso } of plan) {
-      const child = visit(mapping.to, depth + 1, null, childAlso);
+      let child = childByTarget.get(mapping.to);
+      if (!child) {
+        child = visit(mapping.to, depth + 1, childAlso);
+        childByTarget.set(mapping.to, child);
+        node.children.push(child);
+      }
       const target = child.url;
       let status = 'stored';
       if (!target) status = 'omitted';
       else if (mapping.from !== resolution.url || mapping.to !== target) {
         status = o.answers === 'repoint' ? 'repointed' : 'dangling';
       }
-      child.edge = { mapping, status };
+      child.edges.push({ mapping, status });
       expansionMappings.push({ mapping, from: resolution.url, to: target, status });
       if (status === 'dangling') {
         trace.push(`Rule 4: ${mapping.mapType} ${shortLabel(mapping.from)} → ${shortLabel(mapping.to)} stays as stored, so in OpenMRS ${shortLabel(resolution.url)} doesn't get ${shortLabel(target)}.`);
       }
-      node.children.push(child);
     }
     return node;
   }
 
-  const tree = visit(stored, 0, null);
+  const tree = visit(stored, 0);
   return {
     reference: { ...reference, stored },
     adding,

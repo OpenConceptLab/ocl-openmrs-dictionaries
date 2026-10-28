@@ -147,15 +147,17 @@ function conceptLabel(graph, url) {
 const EDGE_LABEL = { 'Q-AND-A': 'answer', 'CONCEPT-SET': 'member' };
 
 function renderNode(graph, node, onlyHere) {
-  const edge = node.edge;
+  const edges = node.edges;
+  const edgeLabel = [...new Set(edges.map((e) => EDGE_LABEL[e.mapping.mapType] || e.mapping.mapType))].join(', ');
+  const stored = (status) => [...new Set(edges.filter((e) => e.status === status).map((e) => `${shortLabel(e.mapping.from)} → ${shortLabel(e.mapping.to)}`))].join('; ');
   const badges = [];
   if (node.status === 'replaced') badges.push(h('span', { class: 'badge badge--replaced', title: `SAME-AS mapping stored in ${sourceName(node.resolution.via.holder)}` }, `replaces ${shortLabel(node.original)}`));
   if (node.status === 'omitted') badges.push(h('span', { class: 'badge' }, `left out: ${shortLabel(node.resolution.equivalent)} ranks higher`));
   for (const flag of (node.resolution.flags || [])) {
     if (flag.kind === 'tie') badges.push(h('span', { class: 'badge badge--tie' }, `tie: ${flag.candidates.map(shortLabel).join(', ')}`));
   }
-  if (edge && edge.status === 'repointed') badges.push(h('span', { class: 'badge badge--repointed', title: 'Rule 4' }, `re-pointed from ${shortLabel(edge.mapping.from)} → ${shortLabel(edge.mapping.to)}`));
-  if (edge && edge.status === 'dangling') badges.push(h('span', { class: 'badge badge--missing', title: 'Rule 4' }, `not linked in OpenMRS: stored as ${shortLabel(edge.mapping.from)} → ${shortLabel(edge.mapping.to)}`));
+  if (stored('repointed')) badges.push(h('span', { class: 'badge badge--repointed', title: 'Rule 4' }, `re-pointed from ${stored('repointed')}`));
+  if (stored('dangling')) badges.push(h('span', { class: 'badge badge--missing', title: 'Rule 4' }, `not linked in OpenMRS: stored as ${stored('dangling')}`));
   if (node.repeat) badges.push(h('span', { class: 'badge' }, 'listed above'));
   const only = node.url && onlyHere && onlyHere.has(node.url) && !node.repeat;
   if (only) badges.push(h('span', { class: 'badge badge--only' }, 'only on this side'));
@@ -164,7 +166,7 @@ function renderNode(graph, node, onlyHere) {
   const classes = ['node', `node--${node.status}`, node.repeat ? 'node--repeat' : '', only ? 'node--only' : ''].filter(Boolean).join(' ');
   return h('li', { class: classes },
     h('div', { class: 'row' },
-      edge ? h('span', { class: 'edge' }, EDGE_LABEL[edge.mapping.mapType] || edge.mapping.mapType) : null,
+      edgeLabel ? h('span', { class: 'edge' }, edgeLabel) : null,
       ...conceptLabel(graph, shown),
       ...badges),
     node.children.length ? h('ul', {}, ...node.children.map((child) => renderNode(graph, child, onlyHere))) : null);
