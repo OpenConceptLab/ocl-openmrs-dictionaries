@@ -121,10 +121,18 @@ export async function fetchGraph({
   }
 
   roots.forEach(enqueue);
+  let failed = false;
   while (queue.length) {
     const batch = queue.splice(0, concurrency);
     await Promise.all(batch.map(async (url) => {
-      await visit(url);
+      try {
+        await visit(url);
+      } catch (error) {
+        failed = true;
+        throw error;
+      }
+      // Requests still in flight when a sibling fails finish later; they mustn't report progress.
+      if (failed) return;
       done += 1;
       onProgress({ done, total: queued.size });
     }));

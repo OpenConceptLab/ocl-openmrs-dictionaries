@@ -7,6 +7,7 @@ import { fetchGraph, ApiError } from './data.js';
 
 const TBV3 = 'https://app.v3.openconceptlab.org/#';
 const TOKEN_KEY = 'ocl-openmrs-dictionaries.token';
+let liveRun = 0;
 const ANY = 'any';
 
 const state = {
@@ -264,19 +265,25 @@ async function runLive() {
     return;
   }
   storage.set(TOKEN_KEY, live.remember ? token : '');
+  // Read with the settings as they are now; the checkbox can change while the requests run.
+  const cascade = live.cascade;
+  const run = ++liveRun;
   Object.assign(live, { error: '', progress: 'Starting…', graph: null, root: null });
   renderScenario();
   try {
     const graph = await fetchGraph({
-      roots: [root], sources: Object.values(SOURCES), token, cascade: live.cascade,
+      roots: [root], sources: Object.values(SOURCES), token, cascade,
       onProgress: ({ done, total }) => {
+        if (run !== liveRun) return;
         live.progress = `Read ${done} of ${total} concepts so far…`;
         const progress = document.getElementById('live-progress');
         if (progress) progress.textContent = live.progress;
       },
     });
-    Object.assign(live, { graph: indexGraph(graph), root, fetchedCascade: live.cascade, progress: '' });
+    if (run !== liveRun) return;
+    Object.assign(live, { graph: indexGraph(graph), root, fetchedCascade: cascade, progress: '' });
   } catch (error) {
+    if (run !== liveRun) return;
     live.progress = '';
     live.error = error instanceof ApiError && (error.status === 401 || error.status === 403)
       ? 'The OCL API refused the request. Check that the token is right and still active.'
