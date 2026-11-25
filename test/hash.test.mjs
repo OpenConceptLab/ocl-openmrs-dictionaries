@@ -36,3 +36,9 @@ test("an old live link's cascade=0 reads as the live setting, and keeps the draf
   assert.equal(decodeOptions(again).options.cascade, PRESETS.draft.options.cascade);
   assert.equal(decodeLiveCascade(again, true), false);
 });
+
+test('a saved live view starts with answers and members unless the link turns them off', () => {
+  assert.equal(decodeLiveCascade(new URLSearchParams('s=any&r=1&c=CIEL%3A163731&cascade=union'), false), true);
+  assert.equal(decodeLiveCascade(new URLSearchParams('s=any&r=1&c=CIEL%3A163731&lc=0'), true), false);
+  assert.equal(decodeLiveCascade(new URLSearchParams('s=3&r=1'), false), false);
+});

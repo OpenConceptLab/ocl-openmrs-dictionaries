@@ -171,6 +171,11 @@ function openStep(id) {
   state.scenario = id;
   if (STEPS[id]) resetToRoundOne();
   update();
+  showTop();
+}
+
+// A newly opened scenario starts at its top, with keyboard focus on its heading.
+function showTop() {
   window.scrollTo(0, 0);
   const heading = document.querySelector('#scenario h2');
   if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
@@ -299,7 +304,7 @@ function changedNote() {
     'Settings changed from round 1: ',
     changed.flatMap((rule, i) => [i ? '; ' : '', h('strong', {}, rule.label), ` → ${optionLabel(rule, state.options[rule.key])}`]),
     '. ',
-    h('button', { type: 'button', class: 'button button--text', onclick: () => { resetToRoundOne(); update(); } }, 'Reset'));
+    h('button', { type: 'button', class: 'button button--text', onclick: () => { state.options = { ...DEFAULT_OPTIONS }; update(); } }, 'Reset'));
 }
 
 function stepOne(scenario) {
@@ -318,7 +323,7 @@ function stepOne(scenario) {
       h('p', {}, h('strong', {}, 'Still open: '), 'how OCL stores the answer links that move to PIH\'s concepts. It could work them out from the SAME-AS mappings each time, or create new PIH-owned mappings. Leaning: bring CIEL\'s own mappings into the collection, marked with the equivalency.'),
       h('p', { class: 'question__more' }, 'To compare: ',
         h('a', { href: `#s=1&r=${ROUND}&cmp=off` }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
-        h('a', { href: `#s=3&r=${ROUND}`, onclick: (event) => { event.preventDefault(); openStep('3'); } }, 'next: Step 2, a decision →'))),
+        h('a', { href: `#s=3&r=${ROUND}` }, 'next: Step 2, a decision →'))),
   ];
 }
 
@@ -474,6 +479,11 @@ async function start() {
   update();
 }
 
-window.addEventListener('hashchange', () => { readHash(); update(); });
+window.addEventListener('hashchange', () => {
+  const before = state.scenario;
+  readHash();
+  update();
+  if (state.scenario !== before) showTop();
+});
 document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
 start();

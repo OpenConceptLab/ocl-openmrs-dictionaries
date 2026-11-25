@@ -22,7 +22,7 @@ export function decodeOptions(params) {
 export function decodeLiveCascade(params, current) {
   if (params.has('lc')) return params.get('lc') !== '0';
   if (['0', '1'].includes(params.get('cascade'))) return params.get('cascade') !== '0';
-  return current;
+  return params.has('c') ? true : current; // a saved live view starts with answers and members
 }
 
 export function encodeOptions(params, options, compare) {
