@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { decodeOptions, encodeOptions } from '../app/hash.js';
+import { decodeOptions, encodeOptions, decodeLiveCascade } from '../app/hash.js';
 import { PRESETS, DEFAULT_OPTIONS } from '../app/engine.js';
 
 const decode = (hash) => decodeOptions(new URLSearchParams(hash));
@@ -24,4 +24,15 @@ test('options and an explicit "no comparison" survive a round trip', () => {
     encodeOptions(params, options, compare);
     assert.deepEqual(decodeOptions(params), { options, compare });
   }
+});
+
+test("an old live link's cascade=0 reads as the live setting, and keeps the draft's Rule 3", () => {
+  const params = new URLSearchParams('s=any&c=CIEL%3A163731&cascade=0');
+  assert.equal(decodeLiveCascade(params, true), false);
+  assert.equal(decodeOptions(params).options.cascade, PRESETS.draft.options.cascade);
+  const again = new URLSearchParams({ s: 'any' });
+  encodeOptions(again, decodeOptions(params).options, null);
+  again.set('lc', '0');
+  assert.equal(decodeOptions(again).options.cascade, PRESETS.draft.options.cascade);
+  assert.equal(decodeLiveCascade(again, true), false);
 });

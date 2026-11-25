@@ -180,3 +180,25 @@ test('The add message matches a rewritten reference', () => {
   assert.equal(shortLabel(result.reference.stored), 'PIH:2545');
   assert.match(result.adding.text, /saved as PIH:2545/);
 });
+
+test('The add message says when Rule 5 overrides the choice', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '3');
+  const result = expand(graph, scenario.reference, { ...PRESETS.round1.options, reference: 'rewrite' });
+  assert.equal(shortLabel(result.reference.stored), 'PIH:2545');
+  assert.match(result.adding.text, /Rule 5 then saves the reference as PIH:2545/);
+});
+
+test('Round 1: a link back to the chosen concept and a link to its equivalent stay distinct, in either order', () => {
+  const [c1, c3, p2] = [concept('CIEL', 1), concept('CIEL', 3), concept('PIH', 2)];
+  for (const [back, direct] of [[1, 2], [2, 1]]) {
+    const link = (mapType, from, to, sortWeight) => ({ url: `${from}m-${to.split('/')[6]}-${mapType}/`, holder: sourceOf(from), mapType, from, to, retired: false, sortWeight });
+    const g = {
+      concepts: Object.fromEntries([c1, c3, p2].map((url) => [url, { url, name: url }])),
+      mappings: [link('CONCEPT-SET', c1, c3, 1), link('Q-AND-A', c3, c1, back), link('Q-AND-A', c3, p2, direct), sameAs('PIH', p2, c1)],
+    };
+    const result = expand(g, { concept: c1, cascade: true }, PRESETS.round1.options);
+    const answers = result.tree.children[0].children;
+    assert.deepEqual(answers.map((child) => shortLabel(child.url)).sort(), ['CIEL:1', 'PIH:2']);
+    assert.ok(answers.every((child) => child.edges.every((edge) => edge.status === 'stored')));
+  }
+});

@@ -3,7 +3,7 @@
 // State lives in the URL hash, so a link opens the same scenario with the same options.
 
 import { RULES, PRESETS, DEFAULT_OPTIONS, SOURCES, expand, indexGraph, sourceOf, sourceName, codeOf, shortLabel } from './engine.js';
-import { ROUND, decodeOptions, encodeOptions } from './hash.js';
+import { ROUND, decodeOptions, encodeOptions, decodeLiveCascade } from './hash.js';
 import { SCENARIOS } from './scenarios.js';
 import { fetchGraph, ApiError, parseConcept } from './data.js';
 
@@ -37,7 +37,7 @@ const GROUPS = [
     proposal: "Round 1 proposal, to check with the group: a concept someone chose on purpose stays as chosen.", keys: ['substitution', 'root', 'tie'] },
   { rule: 3, title: 'When PIH has the same question, whose answers come with it?',
     meaning: "Matters when PIH's and CIEL's versions have different answers or set members (Step 2).",
-    proposal: "Round 1 proposal, to check with the group: the concept someone added brings its own answers, each swapped for PIH's where PIH has one.", keys: ['cascade'] },
+    proposal: "Round 1 proposal, to check with the group: the concept someone added brings its own answers, each swapped for the preferred source's version where there is one.", keys: ['cascade'] },
   { rule: 4, title: 'Do answers follow the swap?',
     meaning: "A CIEL question's answers are stored as links to CIEL concepts. When those concepts are swapped for PIH's, the links have to move too, or OpenMRS loses the answers.", keys: ['answers'] },
   { rule: 5, title: 'What does the collection keep as the reference you added?',
@@ -61,7 +61,7 @@ const OPTION = {
   tie: { keep: 'Keep the original and flag it', lowest: 'Use the lowest code' },
   root: { stays: 'Stays as they chose it', swap: 'Is swapped like any other' },
   pick: { own: 'The concept they added', equivalent: 'The preferred version' },
-  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where the preferred source has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
+  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where the preferred source has them", union: 'Both', stepwise: "The added concept's at the first level, then the preferred version's" },
   answers: { repoint: 'Point to the version in the dictionary', leave: 'Stay as stored' },
   reference: { keep: 'What you added', rewrite: 'Rewritten to the preferred version' },
   adding: { inform: 'Allow it and tell them', offer: 'Offer the preferred version', block: 'Block it', silent: 'Allow it silently', choose: 'Tell them and make them choose' },
@@ -100,7 +100,7 @@ function readHash() {
   if (scenario === ANY || SCENARIOS.some((s) => s.id === scenario)) state.scenario = scenario;
   Object.assign(state, decodeOptions(params));
   if (params.has('c')) state.live.concept = params.get('c');
-  if (params.has('cascade')) state.live.cascade = params.get('cascade') !== '0';
+  state.live.cascade = decodeLiveCascade(params, state.live.cascade);
 }
 
 function writeHash() {
@@ -108,7 +108,7 @@ function writeHash() {
   encodeOptions(params, state.options, state.compare);
   if (state.scenario === ANY && state.live.concept) {
     params.set('c', state.live.concept);
-    if (!state.live.cascade) params.set('cascade', '0');
+    if (!state.live.cascade) params.set('lc', '0');
   }
   history.replaceState(null, '', `#${params}`);
 }
@@ -125,7 +125,7 @@ function presetMatching(options) {
 }
 
 // --- controls: the rules drawer and the scenario tabs ---
-const PHONE = window.matchMedia('(max-width: 600px)');
+const PHONE = window.matchMedia('(max-width: 700px)');
 
 // On a phone the drawer covers the page, so keyboard focus stays inside it until it closes.
 function protectPage() {
@@ -196,19 +196,22 @@ function renderControls() {
   document.getElementById('close-rules').onclick = () => setDrawer(false);
 }
 
+// Opens a scenario at its top. The two steps are the guided path, so they open at round 1 with their own comparison.
+function openStep(id) {
+  state.scenario = id;
+  if (STEPS[id]) Object.assign(state, { options: { ...DEFAULT_OPTIONS }, compare: null });
+  update();
+  window.scrollTo(0, 0);
+  const heading = document.querySelector('#scenario h2');
+  if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+}
+
 function renderTabs() {
   const tab = (id, label) => h('a', {
     href: `#s=${id}&r=${ROUND}`,
     class: STEPS[id] ? 'tab--step' : null,
     'aria-current': state.scenario === id ? 'page' : null,
-    onclick: (event) => {
-      event.preventDefault();
-      state.scenario = id;
-      // The two steps are the guided path, so they always open at round 1 with their own comparison.
-      if (STEPS[id]) Object.assign(state, { options: { ...DEFAULT_OPTIONS }, compare: null });
-      update();
-      window.scrollTo(0, 0);
-    },
+    onclick: (event) => { event.preventDefault(); openStep(id); },
   }, label);
   document.getElementById('tabs').replaceChildren(
     ...SCENARIOS.filter((s) => STEPS[s.id]).map((s) => tab(s.id, `${STEPS[s.id]} · ${SHORT[s.id]}`)),
@@ -285,7 +288,7 @@ function resultCard(graph, reference, result, heading, onlyHere) {
     h('h3', {}, heading),
     h('dl', { class: 'card__meta' },
       h('div', {}, h('dt', {}, 'You added'), h('dd', {}, written)),
-      stored ? h('div', {}, h('dt', {}, 'The collection keeps it as (Rule 5)'), h('dd', {}, stored)) : null,
+      stored ? h('div', {}, h('dt', {}, 'The collection keeps it as'), h('dd', {}, stored)) : null,
       h('div', {}, h('dt', {}, 'What they see when adding it (Rule 6)'), h('dd', {}, h('div', { class: `message message--${result.adding.kind}` }, result.adding.text)))),
     h('p', { class: 'counts' }, members.length
       ? `What the dictionary contains: ${members.length} concepts · ${bySource.map(([name, n]) => `${n} ${name}`).join(' · ')}`
@@ -345,7 +348,7 @@ function stepOne(scenario) {
       h('p', {}, h('strong', {}, 'Still open: '), 'how OCL stores the answer links that move to PIH\'s concepts. It could work them out from the SAME-AS mappings each time, or create new PIH-owned mappings. Leaning: bring CIEL\'s own mappings into the collection, marked with the equivalency.'),
       h('p', { class: 'question__more' }, 'To compare: ',
         h('a', { href: `#s=1&r=${ROUND}&cmp=off` }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
-        h('a', { href: `#s=3&r=${ROUND}` }, 'next: Step 2, a decision →'))),
+        h('a', { href: `#s=3&r=${ROUND}`, onclick: (event) => { event.preventDefault(); openStep('3'); } }, 'next: Step 2, a decision →'))),
   ];
 }
 

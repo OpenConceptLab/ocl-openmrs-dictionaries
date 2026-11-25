@@ -254,9 +254,12 @@ export function expand(graph, reference, options = {}) {
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
   const atAdd = whenAdded(reference.concept);
   const adding = describeAdding(reference.concept, atAdd, o);
-  // The message has to match what's saved: a rewritten reference changes what the dictionary contains.
-  if (o.reference === 'rewrite' && atAdd.replaced && ['inform', 'silent'].includes(o.adding)) {
-    adding.text = `Added, and saved as ${shortLabel(atAdd.url)}, its equivalent in a higher-ranked source (Rule 5).${o.adding === 'silent' ? ' Nothing tells the user.' : ''}`;
+  // A Rule 5 rewrite overrides what the person chose or was told, so the message says so.
+  const rewrites = o.reference === 'rewrite' && atAdd.replaced;
+  if (rewrites && !adding.blocked && adding.implies !== atAdd.url) {
+    adding.text = ['inform', 'silent'].includes(o.adding)
+      ? `Added, and saved as ${shortLabel(atAdd.url)}, its equivalent in a higher-ranked source (Rule 5).${o.adding === 'silent' ? ' Nothing tells the user.' : ''}`
+      : `${adding.text} Rule 5 then saves the reference as ${shortLabel(atAdd.url)}.`;
   }
   if (adding.blocked) {
     trace.push(`Rule 6: adding ${shortLabel(reference.concept)} is blocked, so the collection gets nothing.`);
@@ -279,6 +282,9 @@ export function expand(graph, reference, options = {}) {
     .sort((a, b) => STRUCTURAL_MAP_TYPES.indexOf(a.mapType) - STRUCTURAL_MAP_TYPES.indexOf(b.mapType)
       || (a.sortWeight ?? Infinity) - (b.sortWeight ?? Infinity) || compareCodes(a.to, b.to));
 
+  // Round 1 proposal: the concept someone added stays as they chose it, wherever the cascade meets it again.
+  const here = (url) => (o.root === 'stays' && url === stored ? { url, replaced: false, flags: now(url).flags } : now(url));
+
   // Rule 3: whose answers and set members a concept brings. Each entry is a mapping to follow, plus (for
   // the union) the referenced side's concepts that resolve to the same child, so the union continues below it.
   function childPlan(original, member, depth, alsoFrom) {
@@ -288,12 +294,12 @@ export function expand(graph, reference, options = {}) {
     if (o.cascade === 'stepwise' && original !== member && depth === 0) return referenced();
     if (o.cascade !== 'union') return own();
     const plan = own();
-    const ownTargets = new Set(plan.map((step) => now(step.mapping.to).url));
-    const lead = new Map(plan.map((step) => [now(step.mapping.to).url, step])); // the step each child is visited from
+    const ownTargets = new Set(plan.map((step) => here(step.mapping.to).url));
+    const lead = new Map(plan.map((step) => [here(step.mapping.to).url, step])); // the step each child is visited from
     const kept = new Set();
     for (const extra of [original, ...alsoFrom].filter((url) => url !== member)) {
       for (const mapping of structural(extra)) {
-        const target = now(mapping.to).url;
+        const target = here(mapping.to).url;
         const step = target && lead.get(target);
         if (step) {
           // Another referenced concept behind the same child is cascaded with it, so the union continues below.
@@ -330,10 +336,8 @@ export function expand(graph, reference, options = {}) {
   }
 
   function visit(original, depth, alsoFrom = []) {
-    // Round 1 proposal: the concept someone added stays as they chose it; swaps apply to what the cascade reaches.
-    const keepRoot = original === stored && o.root === 'stays';
-    const resolution = keepRoot ? { url: original, replaced: false, flags: now(original).flags } : now(original);
-    if (keepRoot && now(original).replaced) {
+    const resolution = here(original);
+    if (depth === 0 && !resolution.replaced && o.root === 'stays' && now(original).replaced) {
       trace.push(`Rule 2: ${shortLabel(original)} stays as added, though ${shortLabel(now(original).url)} is its equivalent in a higher-ranked source.`);
     }
     const node = { original, url: resolution.url, resolution, edges: [], children: [] };
@@ -360,7 +364,7 @@ export function expand(graph, reference, options = {}) {
     // a set member, and two concepts can resolve to the same replacement.
     const childByTarget = new Map();
     for (const { mapping, alsoFrom: childAlso } of plan) {
-      const key = now(mapping.to).url || mapping.to;
+      const key = here(mapping.to).url || mapping.to;
       let child = childByTarget.get(key);
       if (!child) {
         child = visit(mapping.to, depth + 1, childAlso);
@@ -403,11 +407,11 @@ function describeAdding(url, resolution, o) {
   const replacement = shortLabel(resolution.url);
   switch (o.adding) {
     case 'choose':
-      return { kind: 'offer', text: `${original} has an equivalent in a higher-ranked source: ${replacement}. They can bring different answers and set members, so choose which one to add. (Shown here as if they choose ${o.pick === 'equivalent' ? replacement : original}.)` };
+      return { kind: 'offer', implies: o.pick === 'equivalent' ? resolution.url : url, text: `${original} has an equivalent in a higher-ranked source: ${replacement}. They can bring different answers and set members, so choose which one to add. (Shown here as if they choose ${o.pick === 'equivalent' ? replacement : original}.)` };
     case 'block':
       return { kind: 'block', blocked: true, text: `Not added: ${replacement}, its equivalent in a higher-ranked source, is used instead. Add ${replacement} directly.` };
     case 'offer':
-      return { kind: 'offer', text: `${replacement} is the equivalent in a higher-ranked source. Use it instead? (Shown here as if they accept.)` };
+      return { kind: 'offer', implies: resolution.url, text: `${replacement} is the equivalent in a higher-ranked source. Use it instead? (Shown here as if they accept.)` };
     case 'silent':
       return { kind: 'silent', text: `Added. Nothing tells the user that ${original} resolves to ${replacement}.` };
     default:

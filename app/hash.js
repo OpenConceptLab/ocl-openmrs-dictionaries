@@ -17,6 +17,14 @@ export function decodeOptions(params) {
   return { options, compare };
 }
 
+// "Try another concept" reads with or without answers and members: `lc=0`, or `cascade=0` in links made
+// before it had its own parameter (`cascade` is also Rule 3's key, whose values are words).
+export function decodeLiveCascade(params, current) {
+  if (params.has('lc')) return params.get('lc') !== '0';
+  if (['0', '1'].includes(params.get('cascade'))) return params.get('cascade') !== '0';
+  return current;
+}
+
 export function encodeOptions(params, options, compare) {
   params.set('r', ROUND);
   for (const rule of RULES) {
