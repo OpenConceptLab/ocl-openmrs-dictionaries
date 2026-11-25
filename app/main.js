@@ -46,34 +46,8 @@ const GROUPS = [
     meaning: "When someone adds a CIEL concept that PIH also has. Round 1: the squad decided OCL tells them loudly and makes them choose which one to add.", keys: ['adding', 'pick'] },
 ];
 
-const FIELD = {
-  ranked: 'Order', lookIn: 'Look for matches in', direction: 'Count SAME-AS mappings stored in', retired: 'Retired mappings and concepts',
-  substitution: 'Which one goes in', root: 'The concept someone adds', pick: 'Which one they choose', tie: 'If PIH has two matches', cascade: 'Answers and set members', answers: 'Answer links',
-  reference: 'The reference', adding: 'When someone adds it',
-};
-
-const OPTION = {
-  ranked: { 'PIH>CIEL': 'PIH, then CIEL', 'CIEL>PIH': 'Swapped later to CIEL, then PIH' },
-  lookIn: { sources: 'PIH and CIEL themselves', collection: 'Only what the collection already has' },
-  direction: { either: 'Either source', higher: 'The preferred source only', lower: 'The other source only' },
-  retired: { ignore: "Don't count", count: 'Count' },
-  substitution: { replace: "The preferred source's replaces the other", omit: 'The other is left out (OCL today)', off: 'Both stay (no equivalency)' },
-  tie: { keep: 'Keep the original and flag it', lowest: 'Use the lowest code' },
-  root: { stays: 'Stays as they chose it', swap: 'Is swapped like any other' },
-  pick: { own: 'The concept they added', equivalent: 'The preferred version' },
-  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where the preferred source has them", union: 'Both', stepwise: "The added concept's at the first level, then the preferred version's" },
-  answers: { repoint: 'Point to the version in the dictionary', leave: 'Stay as stored' },
-  reference: { keep: 'What you added', rewrite: 'Rewritten to the preferred version' },
-  adding: { inform: 'Allow it and tell them', offer: 'Offer the preferred version', block: 'Block it', silent: 'Allow it silently', choose: 'Tell them and make them choose' },
-};
-
-const PRESET_LABEL = {
-  round1: 'Round 1', round1pih: "Round 1, choosing PIH's version", draft: 'Draft before round 1', today: 'OCL today',
-  referenced: "Draft, with CIEL's answers swapped where PIH has them", union: 'Draft, with both sets of answers',
-  stepwise: 'Draft, step by step', off: 'No swapping (no equivalency)',
-};
-const presetLabel = (key) => PRESET_LABEL[key] || PRESETS[key].label;
-const optionLabel = (rule, value) => (OPTION[rule.key] && OPTION[rule.key][value]) || rule.options.find((o) => o.value === value).label;
+const optionLabel = (rule, value) => rule.options.find((o) => o.value === value).label;
+const resetToRoundOne = () => Object.assign(state, { options: { ...DEFAULT_OPTIONS }, compare: null });
 const changedRules = () => RULES.filter((rule) => state.options[rule.key] !== DEFAULT_OPTIONS[rule.key]);
 
 // --- small DOM helper: text only, never HTML ---
@@ -148,7 +122,7 @@ function renderControls() {
   const presetSelect = document.getElementById('preset');
   const current = presetMatching(state.options);
   presetSelect.replaceChildren(
-    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === current }, presetLabel(key))),
+    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === current }, PRESETS[key].label)),
     h('option', { value: '', selected: !current, disabled: true }, 'Custom'),
   );
   presetSelect.onchange = () => {
@@ -160,18 +134,14 @@ function renderControls() {
   const shown = shownCompare();
   compareSelect.replaceChildren(
     h('option', { value: 'none', selected: !shown }, 'Nothing'),
-    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === shown }, presetLabel(key))),
+    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === shown }, PRESETS[key].label)),
   );
   compareSelect.onchange = () => {
     state.compare = compareSelect.value;
     update();
   };
 
-  document.getElementById('reset-rules').onclick = () => {
-    state.options = { ...DEFAULT_OPTIONS };
-    state.compare = null;
-    update();
-  };
+  document.getElementById('reset-rules').onclick = () => { resetToRoundOne(); update(); };
 
   const byKey = Object.fromEntries(RULES.map((rule) => [rule.key, rule]));
   document.getElementById('rules').replaceChildren(...GROUPS.map((group) => h('section', { class: 'rule-group' },
@@ -185,7 +155,7 @@ function renderControls() {
           `${optionLabel(rule, option.value)}${option.value === DEFAULT_OPTIONS[key] ? ' (round 1)' : ''}`)));
       const changed = state.options[key] !== DEFAULT_OPTIONS[key];
       return h('label', { class: `field${changed ? ' field--changed' : ''}`, for: `rule-${key}`, title: rule.help },
-        h('span', {}, FIELD[key] || rule.label), select);
+        h('span', {}, rule.label), select);
     }))));
 
   const changed = changedRules().length;
@@ -199,7 +169,7 @@ function renderControls() {
 // Opens a scenario at its top. The two steps are the guided path, so they open at round 1 with their own comparison.
 function openStep(id) {
   state.scenario = id;
-  if (STEPS[id]) Object.assign(state, { options: { ...DEFAULT_OPTIONS }, compare: null });
+  if (STEPS[id]) resetToRoundOne();
   update();
   window.scrollTo(0, 0);
   const heading = document.querySelector('#scenario h2');
@@ -302,8 +272,8 @@ function resultCard(graph, reference, result, heading, onlyHere) {
 
 function renderResults(graph, reference, compare = shownCompare()) {
   const matching = presetMatching(state.options);
-  const sides = [[state.options, matching ? presetLabel(matching) : 'Your settings']];
-  if (compare) sides.push([PRESETS[compare].options, presetLabel(compare)]);
+  const sides = [[state.options, matching ? PRESETS[matching].label : 'Your settings']];
+  if (compare) sides.push([PRESETS[compare].options, PRESETS[compare].label]);
   const results = sides.map(([options]) => expand(graph, reference, options));
   const urls = results.map((result) => new Set(result.members.map((m) => m.url)));
   // In a comparison, mark the concepts only one side contains.
@@ -327,9 +297,9 @@ function changedNote() {
   if (!changed.length) return null;
   return h('p', { class: 'changed-note' },
     'Settings changed from round 1: ',
-    changed.flatMap((rule, i) => [i ? '; ' : '', h('strong', {}, FIELD[rule.key] || rule.label), ` → ${optionLabel(rule, state.options[rule.key])}`]),
+    changed.flatMap((rule, i) => [i ? '; ' : '', h('strong', {}, rule.label), ` → ${optionLabel(rule, state.options[rule.key])}`]),
     '. ',
-    h('button', { type: 'button', class: 'button button--text', onclick: () => { state.options = { ...DEFAULT_OPTIONS }; update(); } }, 'Reset'));
+    h('button', { type: 'button', class: 'button button--text', onclick: () => { resetToRoundOne(); update(); } }, 'Reset'));
 }
 
 function stepOne(scenario) {

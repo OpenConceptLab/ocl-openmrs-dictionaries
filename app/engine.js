@@ -13,7 +13,7 @@ export const SOURCES = {
 // One entry per choice the wiki's rules leave open. `rule` is the rule number on the Rules page.
 export const RULES = [
   {
-    key: 'ranked', rule: null, label: 'Ranked list',
+    key: 'ranked', rule: null, label: 'Order',
     help: 'References are always added while PIH ranks first. The second option swaps the order afterwards, which is where Rule 5 makes a difference.',
     options: [
       { value: 'PIH>CIEL', label: 'PIH, then CIEL' },
@@ -21,18 +21,18 @@ export const RULES = [
     ],
   },
   {
-    key: 'lookIn', rule: 1, label: 'Look for equivalents in',
+    key: 'lookIn', rule: 1, label: 'Look for matches in',
     options: [
-      { value: 'sources', label: 'The ranked sources' },
-      { value: 'collection', label: 'The collection only' },
+      { value: 'sources', label: 'PIH and CIEL themselves' },
+      { value: 'collection', label: 'Only what the collection already has' },
     ],
   },
   {
     key: 'direction', rule: 1, label: 'Count SAME-AS mappings stored in',
     options: [
       { value: 'either', label: 'Either source' },
-      { value: 'higher', label: 'The higher-ranked source only' },
-      { value: 'lower', label: 'The lower-ranked source only' },
+      { value: 'higher', label: 'The preferred source only' },
+      { value: 'lower', label: 'The other source only' },
     ],
   },
   {
@@ -43,11 +43,11 @@ export const RULES = [
     ],
   },
   {
-    key: 'substitution', rule: 2, label: 'A concept with a higher-ranked equivalent',
+    key: 'substitution', rule: 2, label: 'Which one goes in',
     options: [
-      { value: 'replace', label: 'Is replaced by it' },
-      { value: 'omit', label: 'Is left out' },
-      { value: 'off', label: 'Stays (no equivalency)' },
+      { value: 'replace', label: "The preferred source's replaces the other" },
+      { value: 'omit', label: 'The other is left out (OCL today)' },
+      { value: 'off', label: 'Both stay (no equivalency)' },
     ],
   },
   {
@@ -59,43 +59,43 @@ export const RULES = [
     ],
   },
   {
-    key: 'tie', rule: 2, label: 'Two equivalents in one source',
+    key: 'tie', rule: 2, label: 'Two matches in one source',
     options: [
       { value: 'keep', label: 'Keep the original and flag it' },
       { value: 'lowest', label: 'Use the lowest code' },
     ],
   },
   {
-    key: 'cascade', rule: 3, label: "A replaced concept's answers and set members",
+    key: 'cascade', rule: 3, label: 'Answers and set members',
     options: [
-      { value: 'replacement', label: "The replacement's own" },
-      { value: 'referenced', label: "The referenced concept's" },
-      { value: 'union', label: 'Both (union)' },
-      { value: 'stepwise', label: "Referenced at the first level, then the replacement's" },
+      { value: 'replacement', label: "The preferred version's own" },
+      { value: 'referenced', label: "The added concept's, swapped where the preferred source has them" },
+      { value: 'union', label: 'Both' },
+      { value: 'stepwise', label: "The added concept's at the first level, then the preferred version's" },
     ],
   },
   {
-    key: 'answers', rule: 4, label: 'Mappings that point to a replaced concept',
+    key: 'answers', rule: 4, label: 'Answer links',
     options: [
-      { value: 'repoint', label: 'Point to the replacement' },
+      { value: 'repoint', label: 'Point to the version in the dictionary' },
       { value: 'leave', label: 'Stay as stored' },
     ],
   },
   {
     key: 'reference', rule: 5, label: 'The reference',
     options: [
-      { value: 'keep', label: 'Stays as written' },
-      { value: 'rewrite', label: 'Is rewritten to the replacement' },
+      { value: 'keep', label: 'What you added' },
+      { value: 'rewrite', label: 'Rewritten to the preferred version' },
     ],
   },
   {
     key: 'adding', rule: 6, label: 'When someone adds it',
     options: [
       { value: 'inform', label: 'Allow it and tell them' },
-      { value: 'offer', label: 'Offer the replacement' },
+      { value: 'offer', label: 'Offer the preferred version' },
       { value: 'block', label: 'Block it' },
       { value: 'silent', label: 'Allow it silently' },
-      { value: 'choose', label: 'Make them choose' },
+      { value: 'choose', label: 'Tell them and make them choose' },
     ],
   },
   {
@@ -103,7 +103,7 @@ export const RULES = [
     help: 'Only matters when they have to choose.',
     options: [
       { value: 'own', label: 'The concept they added' },
-      { value: 'equivalent', label: 'The higher-ranked equivalent' },
+      { value: 'equivalent', label: 'The preferred version' },
     ],
   },
 ];
@@ -121,15 +121,15 @@ export const DEFAULT_OPTIONS = { ...DRAFT, root: 'stays', cascade: 'referenced',
 
 export const PRESETS = {
   round1: { label: 'Round 1', options: DEFAULT_OPTIONS },
-  round1pih: { label: 'Round 1, choosing the equivalent', options: { ...DEFAULT_OPTIONS, pick: 'equivalent' } },
+  round1pih: { label: "Round 1, choosing PIH's version", options: { ...DEFAULT_OPTIONS, pick: 'equivalent' } },
   draft: { label: 'Draft before round 1', options: DRAFT },
   // $cascade with omitIfExistsIn pointed at the collection: it checks only what the collection already
   // contains, and leaves concepts out rather than replacing them.
   today: { label: 'OCL today', options: { ...DRAFT, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
-  referenced: { label: 'Draft, following the referenced concept', options: { ...DRAFT, cascade: 'referenced' } },
-  union: { label: 'Draft, union of answers', options: { ...DRAFT, cascade: 'union' } },
+  referenced: { label: "Draft, with CIEL's answers swapped where PIH has them", options: { ...DRAFT, cascade: 'referenced' } },
+  union: { label: 'Draft, with both sets of answers', options: { ...DRAFT, cascade: 'union' } },
   stepwise: { label: 'Draft, step by step', options: { ...DRAFT, cascade: 'stepwise' } },
-  off: { label: 'No equivalency', options: { ...DRAFT, substitution: 'off', adding: 'silent' } },
+  off: { label: 'No swapping (no equivalency)', options: { ...DRAFT, substitution: 'off', adding: 'silent' } },
 };
 
 const SOURCE_PATTERN = /^\/(?:orgs|users)\/[^/]+\/(?:sources|collections)\/[^/]+\//;
