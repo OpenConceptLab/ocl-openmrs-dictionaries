@@ -1,4 +1,5 @@
-// The prototype page: rule options, scenario tabs, results, and the live "Any concept" mode.
+// The prototype page: a guided start (two steps), more scenarios, the live "Try another concept" mode,
+// and every rule option in a side drawer.
 // State lives in the URL hash, so a link opens the same scenario with the same options.
 
 import { RULES, PRESETS, DEFAULT_OPTIONS, SOURCES, expand, indexGraph, sourceOf, sourceName, codeOf, shortLabel } from './engine.js';
@@ -10,6 +11,7 @@ const TBV3 = 'https://app.v3.openconceptlab.org/#';
 // read. The token now lives only in page memory; this key is cleared on load.
 const OLD_TOKEN_KEY = 'ocl-openmrs-dictionaries.token';
 const ANY = 'any';
+const WIKI = 'https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki';
 
 const state = {
   scenario: SCENARIOS[0].id,
@@ -19,6 +21,54 @@ const state = {
   live: { concept: '', cascade: true, token: '', graph: null, root: null, fetchedCascade: true, error: '', progress: '' },
 };
 let snapshot = null;
+
+// --- plain wording for the page; the engine keeps the rule keys and values the URL uses ---
+const SHORT = { 1: 'Partner HIV tested', 2: 'Problem severity', 3: 'Tobacco use status', 4: 'Visit diagnoses', '4b': 'Stool test', 5: 'Adding CIEL Yes' };
+const STEPS = { 1: 'Step 1', 3: 'Step 2' };
+
+const GROUPS = [
+  { rule: null, title: 'Which source the dictionary prefers',
+    meaning: 'References are always added while PIH ranks first. Swapping the order afterwards shows where Rule 5 matters.', keys: ['ranked'] },
+  { rule: 1, title: 'Which concepts count as the same?',
+    meaning: 'Two concepts are the same when a SAME-AS mapping links them. A shared ID number means nothing on its own.', keys: ['lookIn', 'direction', 'retired'] },
+  { rule: 2, title: 'When PIH has the same concept, which one goes in?',
+    meaning: "The dictionary should never hold both PIH's Yes and CIEL's Yes.", keys: ['substitution', 'tie'] },
+  { rule: 3, title: 'When PIH has the same question, whose answers come with it?',
+    meaning: "Matters when PIH's and CIEL's versions have different answers or set members (Step 2).", keys: ['cascade'] },
+  { rule: 4, title: 'Do answers follow the swap?',
+    meaning: "A CIEL question's answers are stored as links to CIEL concepts. When those concepts are swapped for PIH's, the links have to move too, or OpenMRS loses the answers.", keys: ['answers'] },
+  { rule: 5, title: 'What does the collection keep as the reference you added?',
+    meaning: 'The collection can keep what you added, or rewrite it to the preferred version.', keys: ['reference'] },
+  { rule: 6, title: 'What does someone see when they add it?',
+    meaning: 'When someone adds a CIEL concept that PIH also has.', keys: ['adding'] },
+];
+
+const FIELD = {
+  ranked: 'Order', lookIn: 'Look for matches in', direction: 'Count SAME-AS mappings stored in', retired: 'Retired mappings and concepts',
+  substitution: 'Which one goes in', tie: 'If PIH has two matches', cascade: 'Answers and set members', answers: 'Answer links',
+  reference: 'The reference', adding: 'When someone adds it',
+};
+
+const OPTION = {
+  ranked: { 'PIH>CIEL': 'PIH, then CIEL', 'CIEL>PIH': 'Swapped later to CIEL, then PIH' },
+  lookIn: { sources: 'PIH and CIEL themselves', collection: 'Only what the collection already has' },
+  direction: { either: 'Either source', higher: 'The preferred source only', lower: 'The other source only' },
+  retired: { ignore: "Don't count", count: 'Count' },
+  substitution: { replace: "PIH's replaces CIEL's", omit: "CIEL's is left out (OCL today)", off: "CIEL's stays (no equivalency)" },
+  tie: { keep: "Keep CIEL's and flag it", lowest: 'Use the lowest code' },
+  cascade: { replacement: "PIH's own", referenced: "CIEL's, swapped where PIH has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
+  answers: { repoint: "Point to PIH's version", leave: "Stay pointed at CIEL's" },
+  reference: { keep: 'What you added (CIEL:…)', rewrite: "Rewritten to PIH's version" },
+  adding: { inform: 'Allow it and tell them', offer: "Offer PIH's version", block: 'Block it', silent: 'Allow it silently' },
+};
+
+const PRESET_LABEL = {
+  draft: 'Draft rules', today: 'OCL today', referenced: "CIEL's answers, swapped where PIH has them",
+  union: 'Both sets of answers', stepwise: 'Step by step', off: 'No swapping (no equivalency)',
+};
+const presetLabel = (key) => PRESET_LABEL[key] || PRESETS[key].label;
+const optionLabel = (rule, value) => (OPTION[rule.key] && OPTION[rule.key][value]) || rule.options.find((o) => o.value === value).label;
+const changedRules = () => RULES.filter((rule) => state.options[rule.key] !== DEFAULT_OPTIONS[rule.key]);
 
 // --- small DOM helper: text only, never HTML ---
 function h(tag, attrs = {}, ...children) {
@@ -69,12 +119,18 @@ function presetMatching(options) {
   return Object.keys(PRESETS).find((key) => RULES.every((rule) => PRESETS[key].options[rule.key] === options[rule.key])) || '';
 }
 
-// --- controls ---
+// --- controls: the rules drawer and the scenario tabs ---
+function setDrawer(open) {
+  document.getElementById('drawer').hidden = !open;
+  document.body.classList.toggle('drawer-open', open);
+  document.getElementById('toggle-rules').setAttribute('aria-expanded', String(open));
+}
+
 function renderControls() {
   const presetSelect = document.getElementById('preset');
   const current = presetMatching(state.options);
   presetSelect.replaceChildren(
-    ...Object.entries(PRESETS).map(([key, preset]) => h('option', { value: key, selected: key === current }, preset.label)),
+    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === current }, presetLabel(key))),
     h('option', { value: '', selected: !current, disabled: true }, 'Custom'),
   );
   presetSelect.onchange = () => {
@@ -85,41 +141,53 @@ function renderControls() {
   const compareSelect = document.getElementById('compare');
   compareSelect.replaceChildren(
     h('option', { value: '' }, 'Nothing'),
-    ...Object.entries(PRESETS).map(([key, preset]) => h('option', { value: key, selected: key === state.compare }, preset.label)),
+    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === state.compare }, presetLabel(key))),
   );
   compareSelect.onchange = () => {
     state.compare = compareSelect.value;
     update();
   };
 
-  const rules = document.getElementById('rules');
-  rules.replaceChildren(...RULES.map((rule) => {
-    const select = h('select', { id: `rule-${rule.key}`, onchange: (event) => { state.options[rule.key] = event.target.value; update(); } },
-      ...rule.options.map((option) => h('option', { value: option.value, selected: option.value === state.options[rule.key] }, option.label)));
-    const changed = state.options[rule.key] !== DEFAULT_OPTIONS[rule.key];
-    return h('label', { class: `field${changed ? ' field--changed' : ''}`, for: `rule-${rule.key}`, title: rule.help },
-      h('span', {}, rule.rule ? h('span', { class: 'rule-number' }, `Rule ${rule.rule} · `) : null, rule.label),
-      select);
-  }));
-
-  const toggle = document.getElementById('toggle-rules');
-  const changedCount = RULES.filter((rule) => state.options[rule.key] !== DEFAULT_OPTIONS[rule.key]).length;
-  toggle.textContent = rules.hidden ? `Show rules${changedCount ? ` (${changedCount} changed)` : ''}` : 'Hide rules';
-  toggle.onclick = () => {
-    rules.hidden = !rules.hidden;
-    toggle.setAttribute('aria-expanded', String(!rules.hidden));
-    renderControls();
+  document.getElementById('reset-rules').onclick = () => {
+    state.options = { ...DEFAULT_OPTIONS };
+    state.compare = '';
+    update();
   };
+
+  const byKey = Object.fromEntries(RULES.map((rule) => [rule.key, rule]));
+  document.getElementById('rules').replaceChildren(...GROUPS.map((group) => h('section', { class: 'rule-group' },
+    h('h3', {}, group.rule ? h('span', { class: 'rule-number' }, `Rule ${group.rule} · `) : null, group.title),
+    h('p', { class: 'rule-meaning' }, group.meaning),
+    ...group.keys.map((key) => {
+      const rule = byKey[key];
+      const select = h('select', { id: `rule-${key}`, onchange: (event) => { state.options[key] = event.target.value; update(); } },
+        ...rule.options.map((option) => h('option', { value: option.value, selected: option.value === state.options[key] },
+          `${optionLabel(rule, option.value)}${option.value === DEFAULT_OPTIONS[key] ? ' (draft)' : ''}`)));
+      const changed = state.options[key] !== DEFAULT_OPTIONS[key];
+      return h('label', { class: `field${changed ? ' field--changed' : ''}`, for: `rule-${key}`, title: rule.help },
+        h('span', {}, FIELD[key] || rule.label), select);
+    }))));
+
+  const changed = changedRules().length;
+  const toggle = document.getElementById('toggle-rules');
+  toggle.textContent = `Rules and settings · ${changed ? `${changed} changed` : 'all at draft defaults'}`;
+  toggle.classList.toggle('button--changed', Boolean(changed));
+  toggle.onclick = () => setDrawer(document.getElementById('drawer').hidden);
+  document.getElementById('close-rules').onclick = () => setDrawer(false);
 }
 
 function renderTabs() {
-  const tabs = document.getElementById('tabs');
-  const entries = [...SCENARIOS.map((s) => [s.id, `Scenario ${s.id}`]), [ANY, 'Any concept']];
-  tabs.replaceChildren(...entries.map(([id, label]) => h('a', {
+  const tab = (id, label) => h('a', {
     href: `#s=${id}`,
+    class: STEPS[id] ? 'tab--step' : null,
     'aria-current': state.scenario === id ? 'page' : null,
-    onclick: (event) => { event.preventDefault(); state.scenario = id; update(); },
-  }, label)));
+    onclick: (event) => { event.preventDefault(); state.scenario = id; update(); window.scrollTo(0, 0); },
+  }, label);
+  document.getElementById('tabs').replaceChildren(
+    ...SCENARIOS.filter((s) => STEPS[s.id]).map((s) => tab(s.id, `${STEPS[s.id]} · ${SHORT[s.id]}`)),
+    h('span', { class: 'tabs__divider' }, 'More scenarios'),
+    ...SCENARIOS.filter((s) => !STEPS[s.id]).map((s) => tab(s.id, `${s.id} · ${SHORT[s.id]}`)),
+    tab(ANY, 'Try another concept'));
 }
 
 // --- results ---
@@ -146,14 +214,23 @@ function renderNode(graph, node, onlyHere) {
   const edges = node.edges;
   const edgeLabel = [...new Set(edges.map((e) => EDGE_LABEL[e.mapping.mapType] || e.mapping.mapType))].join(', ');
   const stored = (status) => [...new Set(edges.filter((e) => e.status === status).map((e) => `${shortLabel(e.mapping.from)} → ${shortLabel(e.mapping.to)}`))].join('; ');
+  const here = node.url ? sourceName(sourceOf(node.url)) : '';
   const badges = [];
-  if (node.status === 'replaced') badges.push(h('span', { class: 'badge badge--replaced', title: `SAME-AS mapping stored in ${sourceName(node.resolution.via.holder)}` }, `replaces ${shortLabel(node.original)}`));
-  if (node.status === 'omitted') badges.push(h('span', { class: 'badge' }, `left out: ${shortLabel(node.resolution.equivalent)} ranks higher`));
+  if (node.status === 'replaced') badges.push(h('span', { class: 'badge badge--replaced', title: `Swapped in for ${shortLabel(node.original)}. The SAME-AS mapping is stored in ${sourceName(node.resolution.via.holder)} (Rule 2).` }, `${here}'s version of ${shortLabel(node.original)}`));
+  if (node.status === 'omitted') badges.push(h('span', { class: 'badge' }, `left out: ${shortLabel(node.resolution.equivalent)} is preferred`));
   for (const flag of (node.resolution.flags || [])) {
-    if (flag.kind === 'tie') badges.push(h('span', { class: 'badge badge--tie' }, `tie: ${flag.candidates.map(shortLabel).join(', ')}`));
+    if (flag.kind === 'tie') badges.push(h('span', { class: 'badge badge--tie' }, `two matches: ${flag.candidates.map(shortLabel).join(', ')}`));
   }
-  if (stored('repointed')) badges.push(h('span', { class: 'badge badge--repointed', title: 'Rule 4' }, `re-pointed from ${stored('repointed')}`));
-  if (stored('dangling')) badges.push(h('span', { class: 'badge badge--missing', title: 'Rule 4' }, `not linked in OpenMRS: stored as ${stored('dangling')}`));
+  if (stored('repointed')) {
+    const repointed = edges.filter((e) => e.status === 'repointed');
+    const what = [...new Set(repointed.map((e) => EDGE_LABEL[e.mapping.mapType] || 'link'))].join(' and ');
+    // Either this end was swapped (the link moves to it), or only the question's end was (the link is carried over).
+    const text = repointed.some((e) => e.mapping.to !== node.url)
+      ? `${what} link moved to ${here}'s`
+      : `${what} link carried over from ${sourceName(sourceOf(repointed[0].mapping.from))}'s question`;
+    badges.push(h('span', { class: 'badge badge--repointed', title: `Stored as ${stored('repointed')}. The dictionary uses it as pointing here (Rule 4).` }, text));
+  }
+  if (stored('dangling')) badges.push(h('span', { class: 'badge badge--missing', title: `Stored as ${stored('dangling')}, which isn't in the dictionary (Rule 4).` }, 'OpenMRS loses this link'));
   if (node.repeat) badges.push(h('span', { class: 'badge' }, 'listed above'));
   const only = node.url && onlyHere && onlyHere.has(node.url) && !node.repeat;
   if (only) badges.push(h('span', { class: 'badge badge--only' }, 'only on this side'));
@@ -172,35 +249,109 @@ function resultCard(graph, reference, result, heading, onlyHere) {
   const members = result.members;
   const bySource = Object.keys(SOURCES).map((name) => [name, members.filter((m) => sourceName(sourceOf(m.url)) === name).length]);
   const replaced = members.filter((m) => m.replaced).length;
-  const written = h('span', { class: 'inline-concept' }, ...conceptLabel(graph, reference.concept), reference.cascade ? 'with cascade' : null);
+  const written = h('span', { class: 'inline-concept' }, ...conceptLabel(graph, reference.concept), reference.cascade ? 'with its answers and members' : null);
   const stored = result.reference.stored && result.reference.stored !== reference.concept
-    ? h('span', { class: 'inline-concept' }, ...conceptLabel(graph, result.reference.stored), reference.cascade ? 'with cascade' : null)
+    ? h('span', { class: 'inline-concept' }, ...conceptLabel(graph, result.reference.stored), reference.cascade ? 'with its answers and members' : null)
     : null;
 
   return h('article', { class: 'card' },
     h('h3', {}, heading),
     h('dl', { class: 'card__meta' },
-      h('div', {}, h('dt', {}, 'Reference as written'), h('dd', {}, written)),
-      stored ? h('div', {}, h('dt', {}, 'Saved in the collection as (Rule 5)'), h('dd', {}, stored)) : null,
-      h('div', {}, h('dt', {}, 'When someone adds it (Rule 6)'), h('dd', {}, h('div', { class: `message message--${result.adding.kind}` }, result.adding.text)))),
+      h('div', {}, h('dt', {}, 'You added'), h('dd', {}, written)),
+      stored ? h('div', {}, h('dt', {}, 'The collection keeps it as (Rule 5)'), h('dd', {}, stored)) : null,
+      h('div', {}, h('dt', {}, 'What they see when adding it (Rule 6)'), h('dd', {}, h('div', { class: `message message--${result.adding.kind}` }, result.adding.text)))),
     h('p', { class: 'counts' }, members.length
-      ? `${members.length} concepts in the expansion · ${bySource.map(([name, n]) => `${n} ${name}`).join(' · ')} · ${replaced} replaced`
-      : 'Nothing in the expansion'),
+      ? `What the dictionary contains: ${members.length} concepts · ${bySource.map(([name, n]) => `${n} ${name}`).join(' · ')}`
+        + (replaced ? ` · ${replaced} swapped for the preferred version` : '')
+      : 'The dictionary gets nothing'),
     result.tree ? h('ul', { class: 'tree' }, renderNode(graph, result.tree, onlyHere)) : null,
     h('details', { class: 'trace' },
-      h('summary', {}, `Why: ${result.trace.length} decisions`),
+      h('summary', {}, `Why, step by step (${result.trace.length})`),
       h('ol', {}, ...result.trace.map((line) => h('li', {}, line)))));
 }
 
 function renderResults(graph, reference) {
-  const sides = [[state.options, PRESETS[presetMatching(state.options)]?.label || 'Your options']];
-  if (state.compare) sides.push([PRESETS[state.compare].options, PRESETS[state.compare].label]);
+  const matching = presetMatching(state.options);
+  const sides = [[state.options, matching ? presetLabel(matching) : 'Your settings']];
+  if (state.compare) sides.push([PRESETS[state.compare].options, presetLabel(state.compare)]);
   const results = sides.map(([options]) => expand(graph, reference, options));
   const urls = results.map((result) => new Set(result.members.map((m) => m.url)));
   // In a comparison, mark the concepts only one side contains.
   const onlyHere = (i) => (state.compare ? new Set([...urls[i]].filter((url) => !urls[1 - i].has(url))) : null);
   return h('div', { class: `results${state.compare ? ' results--compare' : ''}` },
     ...sides.map(([, heading], i) => resultCard(graph, reference, results[i], heading, onlyHere(i))));
+}
+
+// --- the guided steps ---
+
+function legend() {
+  return h('div', { class: 'legend' },
+    h('span', {}, h('span', { class: 'chip chip--PIH' }, 'PIH'), ' ', h('span', { class: 'chip chip--CIEL' }, 'CIEL'), ' where the concept comes from'),
+    h('span', {}, h('span', { class: 'badge badge--replaced' }, "PIH's version of CIEL:1066"), ' PIH has the same concept, so PIH\'s goes in instead of CIEL\'s'),
+    h('span', {}, h('span', { class: 'badge badge--repointed' }, "answer link moved to PIH's"), ' the question now points to PIH\'s answer'),
+    h('span', {}, h('span', { class: 'badge badge--only' }, 'only on this side'), ' in a side-by-side, what one result has and the other doesn\'t'));
+}
+
+function changedNote() {
+  const changed = changedRules();
+  if (!changed.length) return null;
+  return h('p', { class: 'changed-note' },
+    'Settings changed from the draft: ',
+    changed.flatMap((rule, i) => [i ? '; ' : '', h('strong', {}, FIELD[rule.key] || rule.label), ` → ${optionLabel(rule, state.options[rule.key])}`]),
+    '. ',
+    h('button', { type: 'button', class: 'button button--text', onclick: () => { state.options = { ...DEFAULT_OPTIONS }; update(); } }, 'Reset'));
+}
+
+function stepOne(scenario) {
+  return [
+    h('div', { class: 'scenario-head' },
+      h('p', { class: 'step-label' }, 'Step 1 · How to read a result'),
+      h('h2', {}, 'Partner HIV tested'),
+      h('p', {}, 'You add the CIEL question Partner HIV tested, with its answers. PIH doesn\'t have this question, but it does have Yes, No and Unknown.'),
+      h('p', {}, 'So the dictionary keeps CIEL\'s question and uses PIH\'s Yes, No and Unknown as its answers.'),
+      legend()),
+    changedNote(),
+    renderResults(snapshot, scenario.reference),
+    h('div', { class: 'question' },
+      h('p', { class: 'question__label' }, 'Question for the squad'),
+      h('p', { class: 'question__text' }, 'Is this the right result? CIEL\'s question, with PIH\'s Yes, No and Unknown as its answers.'),
+      h('p', { class: 'question__more' }, 'To compare: ',
+        h('a', { href: '#s=1&cmp=off' }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
+        h('a', { href: '#s=3' }, 'next: Step 2, a decision →'))),
+  ];
+}
+
+const STEP_TWO_CHOICES = [
+  { compare: '', label: "PIH's own (draft)", detail: 'Never, In the past, Currently, Unknown' },
+  { compare: 'referenced', label: "CIEL's, swapped where PIH has them", detail: 'Never, In the past, Currently, Recently quit' },
+  { compare: 'union', label: 'Both', detail: 'All five' },
+];
+
+function stepTwo(scenario) {
+  const atDraft = state.options.cascade === DEFAULT_OPTIONS.cascade;
+  const chosen = atDraft ? state.compare : null;
+  return [
+    h('div', { class: 'scenario-head' },
+      h('p', { class: 'step-label' }, 'Step 2 · A decision'),
+      h('h2', {}, 'Tobacco use status'),
+      h('p', {}, 'You add the CIEL question Tobacco use status. PIH has the same question, History of tobacco use, so PIH\'s goes in.'),
+      h('p', {}, 'Three answers match. CIEL also has Recently quit; PIH also has Unknown.')),
+    h('div', { class: 'question' },
+      h('p', { class: 'question__label' }, 'Question for the squad (Rule 3)'),
+      h('p', { class: 'question__text' }, 'Whose answers come with the question?'),
+      h('div', { class: 'choices', role: 'group', 'aria-label': 'Whose answers come with the question' },
+        ...STEP_TWO_CHOICES.map((choice) => h('button', {
+          type: 'button',
+          class: `choice${chosen === choice.compare ? ' choice--on' : ''}`,
+          'aria-pressed': String(chosen === choice.compare),
+          onclick: () => { state.options = { ...state.options, cascade: DEFAULT_OPTIONS.cascade }; state.compare = choice.compare; update(); },
+        }, h('span', { class: 'choice__label' }, choice.label), h('span', { class: 'choice__detail' }, choice.detail)))),
+      h('p', { class: 'question__more' }, chosen
+        ? 'Shown side by side with the draft. Highlighted concepts are in one result and not the other.'
+        : 'Pick an option to see it side by side with the draft.')),
+    changedNote(),
+    renderResults(snapshot, scenario.reference),
+  ];
 }
 
 function renderScenario() {
@@ -214,15 +365,20 @@ function renderScenario() {
     section.replaceChildren(h('p', { class: 'notice' }, 'Loading the scenario data…'));
     return;
   }
-  section.replaceChildren(
+  if (scenario.id === '1') { section.replaceChildren(...stepOne(scenario).filter(Boolean)); return; }
+  if (scenario.id === '3') { section.replaceChildren(...stepTwo(scenario).filter(Boolean)); return; }
+  section.replaceChildren(...[
     h('div', { class: 'scenario-head' },
-      h('h2', {}, `${scenario.id}. ${scenario.title}`),
+      h('p', { class: 'step-label' }, `Scenario ${scenario.id}`),
+      h('h2', {}, scenario.title),
       h('p', {}, scenario.summary),
-      h('p', {}, h('a', { href: `https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki/Scenarios#scenario-${scenario.id}` }, 'This scenario on the wiki'))),
-    renderResults(snapshot, scenario.reference));
+      h('p', {}, h('a', { href: `${WIKI}/Scenarios#scenario-${scenario.id}` }, 'This scenario on the wiki'))),
+    changedNote(),
+    renderResults(snapshot, scenario.reference),
+  ].filter(Boolean));
 }
 
-// --- Any concept (live) ---
+// --- Try another concept (live) ---
 
 async function runLive() {
   const live = state.live;
@@ -270,21 +426,21 @@ function renderLive() {
 
   const parts = [
     h('div', { class: 'scenario-head' },
-      h('h2', {}, 'Any concept'),
-      h('p', {}, 'Expand any CIEL or PIH concept under the options above, reading live from OCL. PIH and CIEL HEAD, as in the scenarios.')),
+      h('h2', {}, 'Try another concept'),
+      h('p', {}, 'Expand any CIEL or PIH concept under the current rules, reading live from OCL. PIH and CIEL HEAD, as in the scenarios.')),
     h('p', { class: 'notice' }, 'Uses your own OCL API token (from your OCL account settings). The token stays in this page’s memory, goes only to api.openconceptlab.org, and is gone when you reload or close the page.'),
     h('form', { class: 'live-form', onsubmit: (event) => { event.preventDefault(); runLive(); } },
       h('label', { class: 'field', for: 'live-token' }, h('span', {}, 'OCL API token'), tokenInput),
       h('label', { class: 'field', for: 'live-concept' }, h('span', {}, 'Concept'), conceptInput),
       h('div', { class: 'actions' },
-        h('label', { class: 'check', for: 'live-cascade' }, cascade, 'Cascade'),
+        h('label', { class: 'check', for: 'live-cascade' }, cascade, 'With its answers and members'),
         h('button', { type: 'submit', class: 'button', disabled: Boolean(live.progress) }, 'Expand'))),
   ];
   if (live.progress) parts.push(h('p', { class: 'notice', id: 'live-progress' }, live.progress));
   if (live.error) parts.push(h('p', { class: 'notice notice--error', role: 'alert' }, live.error));
   if (live.graph && live.root) {
     // Render with the cascade setting the data was read with; a changed checkbox needs a new read.
-    if (live.cascade !== live.fetchedCascade) parts.push(h('p', { class: 'notice' }, 'Cascade changed: press Expand to read the concept again.'));
+    if (live.cascade !== live.fetchedCascade) parts.push(h('p', { class: 'notice' }, 'Changed: press Expand to read the concept again.'));
     parts.push(renderResults(live.graph, { concept: live.root, cascade: live.fetchedCascade }));
   }
   return parts;
@@ -294,7 +450,7 @@ function renderFooter() {
   document.getElementById('footer').replaceChildren(
     snapshot ? `Scenario data: a stored copy of ${Object.keys(snapshot.concepts).length} concepts read from OCL (${snapshot.repoVersions} of PIH and CIEL) on ${snapshot.generated}. ` : '',
     h('a', { href: 'data/snapshot.json' }, 'The data'), ' · ',
-    h('a', { href: 'https://github.com/OpenConceptLab/ocl-openmrs-dictionaries/wiki/Prototype' }, 'How the prototype works'));
+    h('a', { href: `${WIKI}/Prototype` }, 'How the prototype works'));
 }
 
 function update() {
@@ -308,7 +464,6 @@ function update() {
 async function start() {
   readHash();
   try { localStorage.removeItem(OLD_TOKEN_KEY); } catch { /* storage unavailable */ }
-  if (window.matchMedia('(max-width: 600px)').matches) document.getElementById('rules').hidden = true;
   update();
   try {
     const response = await fetch('data/snapshot.json');
@@ -321,4 +476,5 @@ async function start() {
 }
 
 window.addEventListener('hashchange', () => { readHash(); update(); });
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setDrawer(false); });
 start();
