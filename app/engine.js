@@ -254,6 +254,10 @@ export function expand(graph, reference, options = {}) {
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
   const atAdd = whenAdded(reference.concept);
   const adding = describeAdding(reference.concept, atAdd, o);
+  // The message has to match what's saved: a rewritten reference changes what the dictionary contains.
+  if (o.reference === 'rewrite' && atAdd.replaced && ['inform', 'silent'].includes(o.adding)) {
+    adding.text = `Added, and saved as ${shortLabel(atAdd.url)}, its equivalent in a higher-ranked source (Rule 5).${o.adding === 'silent' ? ' Nothing tells the user.' : ''}`;
+  }
   if (adding.blocked) {
     trace.push(`Rule 6: adding ${shortLabel(reference.concept)} is blocked, so the collection gets nothing.`);
     return { reference: { ...reference, stored: null }, adding, members: [], tree: null, trace };
@@ -327,7 +331,7 @@ export function expand(graph, reference, options = {}) {
 
   function visit(original, depth, alsoFrom = []) {
     // Round 1 proposal: the concept someone added stays as they chose it; swaps apply to what the cascade reaches.
-    const keepRoot = depth === 0 && o.root === 'stays';
+    const keepRoot = original === stored && o.root === 'stays';
     const resolution = keepRoot ? { url: original, replaced: false, flags: now(original).flags } : now(original);
     if (keepRoot && now(original).replaced) {
       trace.push(`Rule 2: ${shortLabel(original)} stays as added, though ${shortLabel(now(original).url)} is its equivalent in a higher-ranked source.`);

@@ -57,14 +57,14 @@ const OPTION = {
   lookIn: { sources: 'PIH and CIEL themselves', collection: 'Only what the collection already has' },
   direction: { either: 'Either source', higher: 'The preferred source only', lower: 'The other source only' },
   retired: { ignore: "Don't count", count: 'Count' },
-  substitution: { replace: "PIH's replaces CIEL's", omit: "CIEL's is left out (OCL today)", off: "CIEL's stays (no equivalency)" },
-  tie: { keep: "Keep CIEL's and flag it", lowest: 'Use the lowest code' },
+  substitution: { replace: "The preferred source's replaces the other", omit: 'The other is left out (OCL today)', off: 'Both stay (no equivalency)' },
+  tie: { keep: 'Keep the original and flag it', lowest: 'Use the lowest code' },
   root: { stays: 'Stays as they chose it', swap: 'Is swapped like any other' },
-  pick: { own: 'The concept they added (CIEL:…)', equivalent: "PIH's version" },
-  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where PIH has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
-  answers: { repoint: "Point to PIH's version", leave: "Stay pointed at CIEL's" },
-  reference: { keep: 'What you added (CIEL:…)', rewrite: "Rewritten to PIH's version" },
-  adding: { inform: 'Allow it and tell them', offer: "Offer PIH's version", block: 'Block it', silent: 'Allow it silently', choose: 'Tell them and make them choose' },
+  pick: { own: 'The concept they added', equivalent: 'The preferred version' },
+  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where the preferred source has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
+  answers: { repoint: 'Point to the version in the dictionary', leave: 'Stay as stored' },
+  reference: { keep: 'What you added', rewrite: 'Rewritten to the preferred version' },
+  adding: { inform: 'Allow it and tell them', offer: 'Offer the preferred version', block: 'Block it', silent: 'Allow it silently', choose: 'Tell them and make them choose' },
 };
 
 const PRESET_LABEL = {
@@ -125,15 +125,22 @@ function presetMatching(options) {
 }
 
 // --- controls: the rules drawer and the scenario tabs ---
+const PHONE = window.matchMedia('(max-width: 600px)');
+
+// On a phone the drawer covers the page, so keyboard focus stays inside it until it closes.
+function protectPage() {
+  const covers = !document.getElementById('drawer').hidden && PHONE.matches;
+  for (const el of document.querySelectorAll('.site-header, .controls, .page, .site-footer')) el.inert = covers;
+}
+PHONE.addEventListener('change', protectPage);
+
 function setDrawer(open) {
   const drawer = document.getElementById('drawer');
   if (drawer.hidden === !open) return;
   drawer.hidden = !open;
   document.body.classList.toggle('drawer-open', open);
   document.getElementById('toggle-rules').setAttribute('aria-expanded', String(open));
-  // On a phone the drawer covers the page, so keyboard focus stays inside it until it closes.
-  const covers = open && window.matchMedia('(max-width: 600px)').matches;
-  for (const el of document.querySelectorAll('.site-header, .controls, .page, .site-footer')) el.inert = covers;
+  protectPage();
   (open ? document.getElementById('close-rules') : document.getElementById('toggle-rules')).focus();
 }
 
@@ -194,7 +201,14 @@ function renderTabs() {
     href: `#s=${id}&r=${ROUND}`,
     class: STEPS[id] ? 'tab--step' : null,
     'aria-current': state.scenario === id ? 'page' : null,
-    onclick: (event) => { event.preventDefault(); state.scenario = id; update(); window.scrollTo(0, 0); },
+    onclick: (event) => {
+      event.preventDefault();
+      state.scenario = id;
+      // The two steps are the guided path, so they always open at round 1 with their own comparison.
+      if (STEPS[id]) Object.assign(state, { options: { ...DEFAULT_OPTIONS }, compare: null });
+      update();
+      window.scrollTo(0, 0);
+    },
   }, label);
   document.getElementById('tabs').replaceChildren(
     ...SCENARIOS.filter((s) => STEPS[s.id]).map((s) => tab(s.id, `${STEPS[s.id]} · ${SHORT[s.id]}`)),

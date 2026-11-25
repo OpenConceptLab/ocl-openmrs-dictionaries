@@ -57,9 +57,10 @@ h3 { font-size: 16px; }
 .rule-group h3 { font-size: 15px; }
 .rule-group .rule-number, .field .rule-number { color: var(--primary-40); font-weight: 500; }
 .rule-meaning { margin: 0; font-size: 13px; color: var(--text-muted); }
-@media (min-width: 1100px) {
+@media (min-width: 601px) {
   body.drawer-open .page, body.drawer-open .controls__bar, body.drawer-open .site-header__inner { margin-right: 400px; }
 }
+@media (max-width: 1199px) { body.drawer-open .results--compare { grid-template-columns: 1fr; } }
 
 .field { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--text-muted); min-width: 0; }
 .field--inline { flex-direction: row; align-items: center; gap: 8px; font-size: 14px; }
