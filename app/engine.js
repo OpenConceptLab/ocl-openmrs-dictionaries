@@ -328,7 +328,7 @@ export function expand(graph, reference, options = {}) {
   function visit(original, depth, alsoFrom = []) {
     // Round 1 proposal: the concept someone added stays as they chose it; swaps apply to what the cascade reaches.
     const keepRoot = depth === 0 && o.root === 'stays';
-    const resolution = keepRoot ? { url: original, replaced: false } : now(original);
+    const resolution = keepRoot ? { url: original, replaced: false, flags: now(original).flags } : now(original);
     if (keepRoot && now(original).replaced) {
       trace.push(`Rule 2: ${shortLabel(original)} stays as added, though ${shortLabel(now(original).url)} is its equivalent in a higher-ranked source.`);
     }
@@ -388,6 +388,10 @@ export function expand(graph, reference, options = {}) {
 }
 
 function describeAdding(url, resolution, o) {
+  const tie = (resolution.flags || []).find((flag) => flag.kind === 'tie');
+  if (!resolution.replaced && tie) {
+    return { kind: 'inform', text: `${shortLabel(url)} has ${tie.candidates.length} equivalents in one higher-ranked source (${tie.candidates.map(shortLabel).join(', ')}), so it's added as written and flagged.` };
+  }
   if (!resolution.replaced) {
     return { kind: 'plain', text: `${shortLabel(url)} has no equivalent in a higher-ranked source, so it's added as written.` };
   }

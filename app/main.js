@@ -3,6 +3,7 @@
 // State lives in the URL hash, so a link opens the same scenario with the same options.
 
 import { RULES, PRESETS, DEFAULT_OPTIONS, SOURCES, expand, indexGraph, sourceOf, sourceName, codeOf, shortLabel } from './engine.js';
+import { ROUND, decodeOptions, encodeOptions } from './hash.js';
 import { SCENARIOS } from './scenarios.js';
 import { fetchGraph, ApiError, parseConcept } from './data.js';
 
@@ -97,27 +98,26 @@ function readHash() {
   const params = new URLSearchParams(location.hash.slice(1));
   const scenario = params.get('s');
   if (scenario === ANY || SCENARIOS.some((s) => s.id === scenario)) state.scenario = scenario;
-  state.options = { ...DEFAULT_OPTIONS };
-  for (const rule of RULES) {
-    const value = params.get(rule.key);
-    if (rule.options.some((option) => option.value === value)) state.options[rule.key] = value;
-  }
-  state.compare = Object.hasOwn(PRESETS, params.get('cmp') || '') ? params.get('cmp') : '';
+  Object.assign(state, decodeOptions(params));
   if (params.has('c')) state.live.concept = params.get('c');
   if (params.has('cascade')) state.live.cascade = params.get('cascade') !== '0';
 }
 
 function writeHash() {
   const params = new URLSearchParams({ s: state.scenario });
-  for (const rule of RULES) {
-    if (state.options[rule.key] !== DEFAULT_OPTIONS[rule.key]) params.set(rule.key, state.options[rule.key]);
-  }
-  if (state.compare) params.set('cmp', state.compare);
+  encodeOptions(params, state.options, state.compare);
   if (state.scenario === ANY && state.live.concept) {
     params.set('c', state.live.concept);
     if (!state.live.cascade) params.set('cascade', '0');
   }
   history.replaceState(null, '', `#${params}`);
+}
+
+// What the page shows side by side. Step 2 shows the two round 1 choices until someone picks something else.
+function shownCompare() {
+  if (state.compare === 'none') return '';
+  if (state.compare) return state.compare;
+  return state.scenario === '3' && changedRules().length === 0 ? 'round1pih' : '';
 }
 
 function presetMatching(options) {
@@ -126,9 +126,15 @@ function presetMatching(options) {
 
 // --- controls: the rules drawer and the scenario tabs ---
 function setDrawer(open) {
-  document.getElementById('drawer').hidden = !open;
+  const drawer = document.getElementById('drawer');
+  if (drawer.hidden === !open) return;
+  drawer.hidden = !open;
   document.body.classList.toggle('drawer-open', open);
   document.getElementById('toggle-rules').setAttribute('aria-expanded', String(open));
+  // On a phone the drawer covers the page, so keyboard focus stays inside it until it closes.
+  const covers = open && window.matchMedia('(max-width: 600px)').matches;
+  for (const el of document.querySelectorAll('.site-header, .controls, .page, .site-footer')) el.inert = covers;
+  (open ? document.getElementById('close-rules') : document.getElementById('toggle-rules')).focus();
 }
 
 function renderControls() {
@@ -144,9 +150,10 @@ function renderControls() {
   };
 
   const compareSelect = document.getElementById('compare');
+  const shown = shownCompare();
   compareSelect.replaceChildren(
-    h('option', { value: '' }, 'Nothing'),
-    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === state.compare }, presetLabel(key))),
+    h('option', { value: 'none', selected: !shown }, 'Nothing'),
+    ...Object.keys(PRESETS).map((key) => h('option', { value: key, selected: key === shown }, presetLabel(key))),
   );
   compareSelect.onchange = () => {
     state.compare = compareSelect.value;
@@ -155,7 +162,7 @@ function renderControls() {
 
   document.getElementById('reset-rules').onclick = () => {
     state.options = { ...DEFAULT_OPTIONS };
-    state.compare = '';
+    state.compare = null;
     update();
   };
 
@@ -184,7 +191,7 @@ function renderControls() {
 
 function renderTabs() {
   const tab = (id, label) => h('a', {
-    href: `#s=${id}`,
+    href: `#s=${id}&r=${ROUND}`,
     class: STEPS[id] ? 'tab--step' : null,
     'aria-current': state.scenario === id ? 'page' : null,
     onclick: (event) => { event.preventDefault(); state.scenario = id; update(); window.scrollTo(0, 0); },
@@ -276,7 +283,7 @@ function resultCard(graph, reference, result, heading, onlyHere) {
       h('ol', {}, ...result.trace.map((line) => h('li', {}, line)))));
 }
 
-function renderResults(graph, reference, compare = state.compare) {
+function renderResults(graph, reference, compare = shownCompare()) {
   const matching = presetMatching(state.options);
   const sides = [[state.options, matching ? presetLabel(matching) : 'Your settings']];
   if (compare) sides.push([PRESETS[compare].options, presetLabel(compare)]);
@@ -323,8 +330,8 @@ function stepOne(scenario) {
       h('p', { class: 'question__text' }, 'Agreed: this is the right result. CIEL\'s question, with PIH\'s Yes, No and Unknown as its answers.'),
       h('p', {}, h('strong', {}, 'Still open: '), 'how OCL stores the answer links that move to PIH\'s concepts. It could work them out from the SAME-AS mappings each time, or create new PIH-owned mappings. Leaning: bring CIEL\'s own mappings into the collection, marked with the equivalency.'),
       h('p', { class: 'question__more' }, 'To compare: ',
-        h('a', { href: '#s=1&cmp=off' }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
-        h('a', { href: '#s=3' }, 'next: Step 2, a decision →'))),
+        h('a', { href: `#s=1&r=${ROUND}&cmp=off` }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
+        h('a', { href: `#s=3&r=${ROUND}` }, 'next: Step 2, a decision →'))),
   ];
 }
 
@@ -335,7 +342,7 @@ const STEP_TWO_VIEWS = [
 
 function stepTwo(scenario) {
   const atRoundOne = changedRules().length === 0;
-  const view = state.compare || (atRoundOne ? 'round1pih' : '');
+  const view = shownCompare();
   return [
     h('div', { class: 'scenario-head' },
       h('p', { class: 'step-label' }, 'Step 2 · A decision'),

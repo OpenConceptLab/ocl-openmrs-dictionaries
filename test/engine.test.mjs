@@ -154,3 +154,11 @@ test('Round 1: the concept someone chooses stays as chosen, and the cascade swap
   // With root "swap", round 1's cascade is the draft's "follow the referenced concept".
   assert.deepEqual(membersOf(scenario, { ...PRESETS.round1.options, root: 'swap' }), membersOf(scenario, PRESETS.referenced.options));
 });
+
+test('Round 1: a concept with two equivalents in one source stays as added, and the tie is flagged', () => {
+  const g = made([sameAs('PIH', concept('PIH', 11), concept('CIEL', 1)), sameAs('PIH', concept('PIH', 10), concept('CIEL', 1))]);
+  const result = expand(g, { concept: concept('CIEL', 1), cascade: false }, PRESETS.round1.options);
+  assert.equal(shortLabel(result.members[0].url), 'CIEL:1');
+  assert.equal(result.members[0].flags[0].kind, 'tie');
+  assert.match(result.adding.text, /2 equivalents/);
+});
