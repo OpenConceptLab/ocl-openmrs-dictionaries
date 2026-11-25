@@ -13,7 +13,7 @@ export const SOURCES = {
 // One entry per choice the wiki's rules leave open. `rule` is the rule number on the Rules page.
 export const RULES = [
   {
-    key: 'ranked', rule: null, label: 'Ranked list',
+    key: 'ranked', rule: null, label: 'Order',
     help: 'References are always added while PIH ranks first. The second option swaps the order afterwards, which is where Rule 5 makes a difference.',
     options: [
       { value: 'PIH>CIEL', label: 'PIH, then CIEL' },
@@ -21,18 +21,18 @@ export const RULES = [
     ],
   },
   {
-    key: 'lookIn', rule: 1, label: 'Look for equivalents in',
+    key: 'lookIn', rule: 1, label: 'Look for matches in',
     options: [
-      { value: 'sources', label: 'The ranked sources' },
-      { value: 'collection', label: 'The collection only' },
+      { value: 'sources', label: 'PIH and CIEL themselves' },
+      { value: 'collection', label: 'Only what the collection already has' },
     ],
   },
   {
     key: 'direction', rule: 1, label: 'Count SAME-AS mappings stored in',
     options: [
       { value: 'either', label: 'Either source' },
-      { value: 'higher', label: 'The higher-ranked source only' },
-      { value: 'lower', label: 'The lower-ranked source only' },
+      { value: 'higher', label: 'The preferred source only' },
+      { value: 'lower', label: 'The other source only' },
     ],
   },
   {
@@ -43,68 +43,93 @@ export const RULES = [
     ],
   },
   {
-    key: 'substitution', rule: 2, label: 'A concept with a higher-ranked equivalent',
+    key: 'substitution', rule: 2, label: 'Which one goes in',
     options: [
-      { value: 'replace', label: 'Is replaced by it' },
-      { value: 'omit', label: 'Is left out' },
-      { value: 'off', label: 'Stays (no equivalency)' },
+      { value: 'replace', label: "The preferred source's replaces the other" },
+      { value: 'omit', label: 'The other is left out (OCL today)' },
+      { value: 'off', label: 'Both stay (no equivalency)' },
     ],
   },
   {
-    key: 'tie', rule: 2, label: 'Two equivalents in one source',
+    key: 'root', rule: 2, label: 'The concept someone adds',
+    help: 'Round 1 proposal: a concept someone chose on purpose stays as chosen. Swaps apply to what the cascade reaches.',
+    options: [
+      { value: 'stays', label: 'Stays as they chose it' },
+      { value: 'swap', label: 'Is swapped like any other' },
+    ],
+  },
+  {
+    key: 'tie', rule: 2, label: 'Two matches in one source',
     options: [
       { value: 'keep', label: 'Keep the original and flag it' },
       { value: 'lowest', label: 'Use the lowest code' },
     ],
   },
   {
-    key: 'cascade', rule: 3, label: "A replaced concept's answers and set members",
+    key: 'cascade', rule: 3, label: 'Answers and set members',
     options: [
-      { value: 'replacement', label: "The replacement's own" },
-      { value: 'referenced', label: "The referenced concept's" },
-      { value: 'union', label: 'Both (union)' },
-      { value: 'stepwise', label: "Referenced at the first level, then the replacement's" },
+      { value: 'replacement', label: "The preferred version's own" },
+      { value: 'referenced', label: "The added concept's, swapped where the preferred source has them" },
+      { value: 'union', label: 'Both' },
+      { value: 'stepwise', label: "The added concept's at the first level, then the preferred version's" },
     ],
   },
   {
-    key: 'answers', rule: 4, label: 'Mappings that point to a replaced concept',
+    key: 'answers', rule: 4, label: 'Answer links',
     options: [
-      { value: 'repoint', label: 'Point to the replacement' },
+      { value: 'repoint', label: 'Point to the version in the dictionary' },
       { value: 'leave', label: 'Stay as stored' },
     ],
   },
   {
     key: 'reference', rule: 5, label: 'The reference',
     options: [
-      { value: 'keep', label: 'Stays as written' },
-      { value: 'rewrite', label: 'Is rewritten to the replacement' },
+      { value: 'keep', label: 'What you added' },
+      { value: 'rewrite', label: 'Rewritten to the preferred version' },
     ],
   },
   {
     key: 'adding', rule: 6, label: 'When someone adds it',
     options: [
       { value: 'inform', label: 'Allow it and tell them' },
-      { value: 'offer', label: 'Offer the replacement' },
+      { value: 'offer', label: 'Offer the preferred version' },
       { value: 'block', label: 'Block it' },
       { value: 'silent', label: 'Allow it silently' },
+      { value: 'choose', label: 'Tell them and make them choose' },
+    ],
+  },
+  {
+    key: 'pick', rule: 6, label: 'Which one they choose',
+    help: 'Only matters when they have to choose.',
+    options: [
+      { value: 'own', label: 'The concept they added' },
+      { value: 'equivalent', label: 'The preferred version' },
     ],
   },
 ];
 
-export const DEFAULT_OPTIONS = {
-  ranked: 'PIH>CIEL', lookIn: 'sources', direction: 'either', retired: 'ignore', substitution: 'replace',
-  tie: 'keep', cascade: 'replacement', answers: 'repoint', reference: 'keep', adding: 'inform',
+// The draft rules as the wiki first wrote them, before the squad's round 1 (25 Nov 2026).
+const DRAFT = {
+  ranked: 'PIH>CIEL', lookIn: 'sources', direction: 'either', retired: 'ignore', substitution: 'replace', root: 'swap',
+  tie: 'keep', cascade: 'replacement', answers: 'repoint', reference: 'keep', adding: 'inform', pick: 'own',
 };
 
+// Round 1: the squad decided that someone adding a concept with an equivalent must choose which one to add.
+// Jon's proposal, still to check with the group: the chosen concept stays as chosen and brings its own
+// answers and set members, each swapped where a higher-ranked source has an equivalent.
+export const DEFAULT_OPTIONS = { ...DRAFT, root: 'stays', cascade: 'referenced', adding: 'choose', pick: 'own' };
+
 export const PRESETS = {
-  draft: { label: 'Draft defaults', options: DEFAULT_OPTIONS },
+  round1: { label: 'Round 1', options: DEFAULT_OPTIONS },
+  round1pih: { label: "Round 1, choosing PIH's version", options: { ...DEFAULT_OPTIONS, pick: 'equivalent' } },
+  draft: { label: 'Draft before round 1', options: DRAFT },
   // $cascade with omitIfExistsIn pointed at the collection: it checks only what the collection already
   // contains, and leaves concepts out rather than replacing them.
-  today: { label: 'OCL today', options: { ...DEFAULT_OPTIONS, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
-  referenced: { label: 'Follow the referenced concept', options: { ...DEFAULT_OPTIONS, cascade: 'referenced' } },
-  union: { label: 'Union of answers', options: { ...DEFAULT_OPTIONS, cascade: 'union' } },
-  stepwise: { label: 'Step by step', options: { ...DEFAULT_OPTIONS, cascade: 'stepwise' } },
-  off: { label: 'No equivalency', options: { ...DEFAULT_OPTIONS, substitution: 'off', adding: 'silent' } },
+  today: { label: 'OCL today', options: { ...DRAFT, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
+  referenced: { label: "Draft, with CIEL's answers swapped where PIH has them", options: { ...DRAFT, cascade: 'referenced' } },
+  union: { label: 'Draft, with both sets of answers', options: { ...DRAFT, cascade: 'union' } },
+  stepwise: { label: 'Draft, step by step', options: { ...DRAFT, cascade: 'stepwise' } },
+  off: { label: 'No swapping (no equivalency)', options: { ...DRAFT, substitution: 'off', adding: 'silent' } },
 };
 
 const SOURCE_PATTERN = /^\/(?:orgs|users)\/[^/]+\/(?:sources|collections)\/[^/]+\//;
@@ -228,7 +253,14 @@ export function expand(graph, reference, options = {}) {
 
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
   const atAdd = whenAdded(reference.concept);
-  const adding = describeAdding(reference.concept, atAdd, o.adding);
+  const adding = describeAdding(reference.concept, atAdd, o);
+  // A Rule 5 rewrite overrides what the person chose or was told, so the message says so.
+  const rewrites = o.reference === 'rewrite' && atAdd.replaced;
+  if (rewrites && !adding.blocked && adding.implies !== atAdd.url) {
+    adding.text = ['inform', 'silent'].includes(o.adding)
+      ? `Added, and saved as ${shortLabel(atAdd.url)}, its equivalent in a higher-ranked source (Rule 5).${o.adding === 'silent' ? ' Nothing tells the user.' : ''}`
+      : `${adding.text} Rule 5 then saves the reference as ${shortLabel(atAdd.url)}.`;
+  }
   if (adding.blocked) {
     trace.push(`Rule 6: adding ${shortLabel(reference.concept)} is blocked, so the collection gets nothing.`);
     return { reference: { ...reference, stored: null }, adding, members: [], tree: null, trace };
@@ -236,9 +268,10 @@ export function expand(graph, reference, options = {}) {
 
   // Rule 5: the reference stays as written, or is rewritten when it's added.
   let stored = reference.concept;
-  if ((o.reference === 'rewrite' || o.adding === 'offer') && atAdd.replaced) {
+  const choseEquivalent = o.adding === 'offer' || (o.adding === 'choose' && o.pick === 'equivalent');
+  if ((o.reference === 'rewrite' || choseEquivalent) && atAdd.replaced) {
     stored = atAdd.url;
-    trace.push(`Rule ${o.reference === 'rewrite' ? 5 : 6}: the reference was saved as ${shortLabel(stored)} instead of ${shortLabel(reference.concept)}.`);
+    trace.push(`Rule ${choseEquivalent ? 6 : 5}: the reference was saved as ${shortLabel(stored)} instead of ${shortLabel(reference.concept)}.`);
   } else {
     trace.push(`Rule 5: the reference stays ${shortLabel(reference.concept)}${reference.cascade ? ' with cascade' : ''}.`);
   }
@@ -249,6 +282,9 @@ export function expand(graph, reference, options = {}) {
     .sort((a, b) => STRUCTURAL_MAP_TYPES.indexOf(a.mapType) - STRUCTURAL_MAP_TYPES.indexOf(b.mapType)
       || (a.sortWeight ?? Infinity) - (b.sortWeight ?? Infinity) || compareCodes(a.to, b.to));
 
+  // Round 1 proposal: the concept someone added stays as they chose it, wherever the cascade meets it again.
+  const here = (url) => (o.root === 'stays' && url === stored ? { url, replaced: false, flags: now(url).flags } : now(url));
+
   // Rule 3: whose answers and set members a concept brings. Each entry is a mapping to follow, plus (for
   // the union) the referenced side's concepts that resolve to the same child, so the union continues below it.
   function childPlan(original, member, depth, alsoFrom) {
@@ -258,12 +294,12 @@ export function expand(graph, reference, options = {}) {
     if (o.cascade === 'stepwise' && original !== member && depth === 0) return referenced();
     if (o.cascade !== 'union') return own();
     const plan = own();
-    const ownTargets = new Set(plan.map((step) => now(step.mapping.to).url));
-    const lead = new Map(plan.map((step) => [now(step.mapping.to).url, step])); // the step each child is visited from
+    const ownTargets = new Set(plan.map((step) => here(step.mapping.to).url));
+    const lead = new Map(plan.map((step) => [here(step.mapping.to).url, step])); // the step each child is visited from
     const kept = new Set();
     for (const extra of [original, ...alsoFrom].filter((url) => url !== member)) {
       for (const mapping of structural(extra)) {
-        const target = now(mapping.to).url;
+        const target = here(mapping.to).url;
         const step = target && lead.get(target);
         if (step) {
           // Another referenced concept behind the same child is cascaded with it, so the union continues below.
@@ -300,7 +336,10 @@ export function expand(graph, reference, options = {}) {
   }
 
   function visit(original, depth, alsoFrom = []) {
-    const resolution = now(original);
+    const resolution = here(original);
+    if (depth === 0 && !resolution.replaced && o.root === 'stays' && now(original).replaced) {
+      trace.push(`Rule 2: ${shortLabel(original)} stays as added, though ${shortLabel(now(original).url)} is its equivalent in a higher-ranked source.`);
+    }
     const node = { original, url: resolution.url, resolution, edges: [], children: [] };
     if (!resolution.url) {
       node.status = 'omitted';
@@ -325,7 +364,7 @@ export function expand(graph, reference, options = {}) {
     // a set member, and two concepts can resolve to the same replacement.
     const childByTarget = new Map();
     for (const { mapping, alsoFrom: childAlso } of plan) {
-      const key = now(mapping.to).url || mapping.to;
+      const key = here(mapping.to).url || mapping.to;
       let child = childByTarget.get(key);
       if (!child) {
         child = visit(mapping.to, depth + 1, childAlso);
@@ -356,20 +395,28 @@ export function expand(graph, reference, options = {}) {
   };
 }
 
-function describeAdding(url, resolution, mode) {
+function describeAdding(url, resolution, o) {
+  const tie = (resolution.flags || []).find((flag) => flag.kind === 'tie');
+  if (!resolution.replaced && tie) {
+    return { kind: 'inform', text: `${shortLabel(url)} has ${tie.candidates.length} equivalents in one higher-ranked source (${tie.candidates.map(shortLabel).join(', ')}), so it's added as written and flagged.` };
+  }
   if (!resolution.replaced) {
     return { kind: 'plain', text: `${shortLabel(url)} has no equivalent in a higher-ranked source, so it's added as written.` };
   }
   const original = shortLabel(url);
   const replacement = shortLabel(resolution.url);
-  switch (mode) {
+  switch (o.adding) {
+    case 'choose':
+      return { kind: 'offer', implies: o.pick === 'equivalent' ? resolution.url : url, text: `${original} has an equivalent in a higher-ranked source: ${replacement}. They can bring different answers and set members, so choose which one to add. (Shown here as if they choose ${o.pick === 'equivalent' ? replacement : original}.)` };
     case 'block':
       return { kind: 'block', blocked: true, text: `Not added: ${replacement}, its equivalent in a higher-ranked source, is used instead. Add ${replacement} directly.` };
     case 'offer':
-      return { kind: 'offer', text: `${replacement} is the equivalent in a higher-ranked source. Use it instead? (Shown here as if they accept.)` };
+      return { kind: 'offer', implies: resolution.url, text: `${replacement} is the equivalent in a higher-ranked source. Use it instead? (Shown here as if they accept.)` };
     case 'silent':
       return { kind: 'silent', text: `Added. Nothing tells the user that ${original} resolves to ${replacement}.` };
     default:
-      return { kind: 'inform', text: `Added. In this dictionary, ${original} resolves to ${replacement}.` };
+      return { kind: 'inform', text: o.root === 'stays'
+        ? `Added. ${original} stays as added, though ${replacement} is its equivalent in a higher-ranked source.`
+        : `Added. In this dictionary, ${original} resolves to ${replacement}.` };
   }
 }

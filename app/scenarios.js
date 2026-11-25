@@ -32,6 +32,8 @@ export const SCENARIOS = [
       draft: [pih(2545), pih(1090), pih(1548), pih(1550), pih(1067)],
       referenced: [pih(2545), pih(1090), pih(1548), pih(1550), ciel(165267)],
       union: [pih(2545), pih(1090), pih(1548), pih(1550), pih(1067), ciel(165267)],
+      round1: [ciel(163731), pih(1090), pih(1548), pih(1550), ciel(165267)],
+      round1pih: [pih(2545), pih(1090), pih(1548), pih(1550), pih(1067)],
     },
   },
   {
@@ -46,6 +48,11 @@ export const SCENARIOS = [
       ],
       referenced: [
         pih(7539), pih(3064), pih(7416), pih(1379), pih(1346), pih(1345), ciel(160249), ciel(160250), ciel(161908),
+        pih(7537), pih(7534), pih(7535), pih(7536), ciel(163139), pih(7538), ciel(162820), pih(1901), ciel(162821),
+        pih(1900), ciel(162822), pih(1903), pih(7059),
+      ],
+      round1: [
+        ciel(159947), pih(3064), pih(7416), pih(1379), pih(1346), pih(1345), ciel(160249), ciel(160250), ciel(161908),
         pih(7537), pih(7534), pih(7535), pih(7536), ciel(163139), pih(7538), ciel(162820), pih(1901), ciel(162821),
         pih(1900), ciel(162822), pih(1903), pih(7059),
       ],
@@ -72,10 +79,12 @@ export const SCENARIOS = [
   {
     id: '5',
     title: 'Adding a CIEL concept that has a PIH equivalent',
-    summary: 'Someone adds CIEL:1065 Yes on its own, without cascade. PIH:1065 Yes is its equivalent.',
+    summary: 'Someone adds CIEL:1065 Yes on its own, without cascade. PIH:1065 Yes is its equivalent. Under round 1 they choose which one to add, and the one they choose goes in.',
     reference: { concept: ciel(1065), cascade: false },
     expected: {
       draft: [pih(1065)],
+      round1: [ciel(1065)],
+      round1pih: [pih(1065)],
     },
   },
 ];

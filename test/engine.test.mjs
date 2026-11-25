@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { expand, indexGraph, PRESETS, shortLabel } from '../app/engine.js';
+import { expand, indexGraph, PRESETS, shortLabel, sourceOf } from '../app/engine.js';
 import { SCENARIOS } from '../app/scenarios.js';
 
 const graph = indexGraph(JSON.parse(readFileSync(new URL('../data/snapshot.json', import.meta.url))));
@@ -140,4 +140,65 @@ test('Ranked list swapped: CIEL ranks first, so a CIEL reference expands as pure
   const scenario = SCENARIOS.find((s) => s.id === '3');
   const result = expand(graph, scenario.reference, { ...PRESETS.draft.options, ranked: 'CIEL>PIH' });
   assert.ok(result.members.every((m) => m.url.startsWith('/orgs/CIEL/')));
+});
+
+test('Round 1: the concept someone chooses stays as chosen, and the cascade swaps what it reaches', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '3');
+  const own = expand(graph, scenario.reference, PRESETS.round1.options);
+  assert.equal(shortLabel(own.reference.stored), 'CIEL:163731');
+  assert.equal(own.tree.status, 'kept');
+  assert.equal(own.adding.kind, 'offer');
+  assert.ok(own.tree.children.every((child) => child.edges.every((edge) => edge.status !== 'dangling')));
+  const equivalent = expand(graph, scenario.reference, PRESETS.round1pih.options);
+  assert.equal(shortLabel(equivalent.reference.stored), 'PIH:2545');
+  // With root "swap", round 1's cascade is the draft's "follow the referenced concept".
+  assert.deepEqual(membersOf(scenario, { ...PRESETS.round1.options, root: 'swap' }), membersOf(scenario, PRESETS.referenced.options));
+});
+
+test('Round 1: a concept with two equivalents in one source stays as added, and the tie is flagged', () => {
+  const g = made([sameAs('PIH', concept('PIH', 11), concept('CIEL', 1)), sameAs('PIH', concept('PIH', 10), concept('CIEL', 1))]);
+  const result = expand(g, { concept: concept('CIEL', 1), cascade: false }, PRESETS.round1.options);
+  assert.equal(shortLabel(result.members[0].url), 'CIEL:1');
+  assert.equal(result.members[0].flags[0].kind, 'tie');
+  assert.match(result.adding.text, /2 equivalents/);
+});
+
+test('Round 1: a cascade that comes back to the chosen concept keeps it, and never adds its equivalent', () => {
+  const link = (mapType, from, to) => ({ url: `${from}m-${to.split('/')[6]}/`, holder: sourceOf(from), mapType, from, to, retired: false });
+  const [c1, c3, p2] = [concept('CIEL', 1), concept('CIEL', 3), concept('PIH', 2)];
+  const g = {
+    concepts: Object.fromEntries([c1, c3, p2].map((url) => [url, { url, name: url }])),
+    mappings: [link('CONCEPT-SET', c1, c3), link('Q-AND-A', c3, c1), sameAs('PIH', p2, c1)],
+  };
+  const result = expand(g, { concept: c1, cascade: true }, PRESETS.round1.options);
+  assert.deepEqual(labels(result.members.map((m) => m.url)), ['CIEL:1', 'CIEL:3']);
+});
+
+test('The add message matches a rewritten reference', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '3');
+  const result = expand(graph, scenario.reference, { ...PRESETS.round1.options, adding: 'inform', reference: 'rewrite' });
+  assert.equal(shortLabel(result.reference.stored), 'PIH:2545');
+  assert.match(result.adding.text, /saved as PIH:2545/);
+});
+
+test('The add message says when Rule 5 overrides the choice', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '3');
+  const result = expand(graph, scenario.reference, { ...PRESETS.round1.options, reference: 'rewrite' });
+  assert.equal(shortLabel(result.reference.stored), 'PIH:2545');
+  assert.match(result.adding.text, /Rule 5 then saves the reference as PIH:2545/);
+});
+
+test('Round 1: a link back to the chosen concept and a link to its equivalent stay distinct, in either order', () => {
+  const [c1, c3, p2] = [concept('CIEL', 1), concept('CIEL', 3), concept('PIH', 2)];
+  for (const [back, direct] of [[1, 2], [2, 1]]) {
+    const link = (mapType, from, to, sortWeight) => ({ url: `${from}m-${to.split('/')[6]}-${mapType}/`, holder: sourceOf(from), mapType, from, to, retired: false, sortWeight });
+    const g = {
+      concepts: Object.fromEntries([c1, c3, p2].map((url) => [url, { url, name: url }])),
+      mappings: [link('CONCEPT-SET', c1, c3, 1), link('Q-AND-A', c3, c1, back), link('Q-AND-A', c3, p2, direct), sameAs('PIH', p2, c1)],
+    };
+    const result = expand(g, { concept: c1, cascade: true }, PRESETS.round1.options);
+    const answers = result.tree.children[0].children;
+    assert.deepEqual(answers.map((child) => shortLabel(child.url)).sort(), ['CIEL:1', 'PIH:2']);
+    assert.ok(answers.every((child) => child.edges.every((edge) => edge.status === 'stored')));
+  }
 });
