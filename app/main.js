@@ -32,20 +32,22 @@ const GROUPS = [
   { rule: 1, title: 'Which concepts count as the same?',
     meaning: 'Two concepts are the same when a SAME-AS mapping links them. A shared ID number means nothing on its own.', keys: ['lookIn', 'direction', 'retired'] },
   { rule: 2, title: 'When PIH has the same concept, which one goes in?',
-    meaning: "The dictionary should never hold both PIH's Yes and CIEL's Yes.", keys: ['substitution', 'tie'] },
+    meaning: "The dictionary should never hold both PIH's Yes and CIEL's Yes. Round 1: the squad agreed PIH's replaces CIEL's (Step 1).",
+    proposal: "Round 1 proposal, to check with the group: a concept someone chose on purpose stays as chosen.", keys: ['substitution', 'root', 'tie'] },
   { rule: 3, title: 'When PIH has the same question, whose answers come with it?',
-    meaning: "Matters when PIH's and CIEL's versions have different answers or set members (Step 2).", keys: ['cascade'] },
+    meaning: "Matters when PIH's and CIEL's versions have different answers or set members (Step 2).",
+    proposal: "Round 1 proposal, to check with the group: the concept someone added brings its own answers, each swapped for PIH's where PIH has one.", keys: ['cascade'] },
   { rule: 4, title: 'Do answers follow the swap?',
     meaning: "A CIEL question's answers are stored as links to CIEL concepts. When those concepts are swapped for PIH's, the links have to move too, or OpenMRS loses the answers.", keys: ['answers'] },
   { rule: 5, title: 'What does the collection keep as the reference you added?',
     meaning: 'The collection can keep what you added, or rewrite it to the preferred version.', keys: ['reference'] },
   { rule: 6, title: 'What does someone see when they add it?',
-    meaning: 'When someone adds a CIEL concept that PIH also has.', keys: ['adding'] },
+    meaning: "When someone adds a CIEL concept that PIH also has. Round 1: the squad decided OCL tells them loudly and makes them choose which one to add.", keys: ['adding', 'pick'] },
 ];
 
 const FIELD = {
   ranked: 'Order', lookIn: 'Look for matches in', direction: 'Count SAME-AS mappings stored in', retired: 'Retired mappings and concepts',
-  substitution: 'Which one goes in', tie: 'If PIH has two matches', cascade: 'Answers and set members', answers: 'Answer links',
+  substitution: 'Which one goes in', root: 'The concept someone adds', pick: 'Which one they choose', tie: 'If PIH has two matches', cascade: 'Answers and set members', answers: 'Answer links',
   reference: 'The reference', adding: 'When someone adds it',
 };
 
@@ -56,15 +58,18 @@ const OPTION = {
   retired: { ignore: "Don't count", count: 'Count' },
   substitution: { replace: "PIH's replaces CIEL's", omit: "CIEL's is left out (OCL today)", off: "CIEL's stays (no equivalency)" },
   tie: { keep: "Keep CIEL's and flag it", lowest: 'Use the lowest code' },
-  cascade: { replacement: "PIH's own", referenced: "CIEL's, swapped where PIH has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
+  root: { stays: 'Stays as they chose it', swap: 'Is swapped like any other' },
+  pick: { own: 'The concept they added (CIEL:…)', equivalent: "PIH's version" },
+  cascade: { replacement: "The preferred version's own", referenced: "The added concept's, swapped where PIH has them", union: 'Both', stepwise: "CIEL's at the first level, then PIH's" },
   answers: { repoint: "Point to PIH's version", leave: "Stay pointed at CIEL's" },
   reference: { keep: 'What you added (CIEL:…)', rewrite: "Rewritten to PIH's version" },
-  adding: { inform: 'Allow it and tell them', offer: "Offer PIH's version", block: 'Block it', silent: 'Allow it silently' },
+  adding: { inform: 'Allow it and tell them', offer: "Offer PIH's version", block: 'Block it', silent: 'Allow it silently', choose: 'Tell them and make them choose' },
 };
 
 const PRESET_LABEL = {
-  draft: 'Draft rules', today: 'OCL today', referenced: "CIEL's answers, swapped where PIH has them",
-  union: 'Both sets of answers', stepwise: 'Step by step', off: 'No swapping (no equivalency)',
+  round1: 'Round 1', round1pih: "Round 1, choosing PIH's version", draft: 'Draft before round 1', today: 'OCL today',
+  referenced: "Draft, with CIEL's answers swapped where PIH has them", union: 'Draft, with both sets of answers',
+  stepwise: 'Draft, step by step', off: 'No swapping (no equivalency)',
 };
 const presetLabel = (key) => PRESET_LABEL[key] || PRESETS[key].label;
 const optionLabel = (rule, value) => (OPTION[rule.key] && OPTION[rule.key][value]) || rule.options.find((o) => o.value === value).label;
@@ -158,11 +163,12 @@ function renderControls() {
   document.getElementById('rules').replaceChildren(...GROUPS.map((group) => h('section', { class: 'rule-group' },
     h('h3', {}, group.rule ? h('span', { class: 'rule-number' }, `Rule ${group.rule} · `) : null, group.title),
     h('p', { class: 'rule-meaning' }, group.meaning),
+    group.proposal ? h('p', { class: 'rule-proposal' }, group.proposal) : null,
     ...group.keys.map((key) => {
       const rule = byKey[key];
       const select = h('select', { id: `rule-${key}`, onchange: (event) => { state.options[key] = event.target.value; update(); } },
         ...rule.options.map((option) => h('option', { value: option.value, selected: option.value === state.options[key] },
-          `${optionLabel(rule, option.value)}${option.value === DEFAULT_OPTIONS[key] ? ' (draft)' : ''}`)));
+          `${optionLabel(rule, option.value)}${option.value === DEFAULT_OPTIONS[key] ? ' (round 1)' : ''}`)));
       const changed = state.options[key] !== DEFAULT_OPTIONS[key];
       return h('label', { class: `field${changed ? ' field--changed' : ''}`, for: `rule-${key}`, title: rule.help },
         h('span', {}, FIELD[key] || rule.label), select);
@@ -170,7 +176,7 @@ function renderControls() {
 
   const changed = changedRules().length;
   const toggle = document.getElementById('toggle-rules');
-  toggle.textContent = `Rules and settings · ${changed ? `${changed} changed` : 'all at draft defaults'}`;
+  toggle.textContent = `Rules and settings · ${changed ? `${changed} changed` : 'all at round 1'}`;
   toggle.classList.toggle('button--changed', Boolean(changed));
   toggle.onclick = () => setDrawer(document.getElementById('drawer').hidden);
   document.getElementById('close-rules').onclick = () => setDrawer(false);
@@ -270,15 +276,15 @@ function resultCard(graph, reference, result, heading, onlyHere) {
       h('ol', {}, ...result.trace.map((line) => h('li', {}, line)))));
 }
 
-function renderResults(graph, reference) {
+function renderResults(graph, reference, compare = state.compare) {
   const matching = presetMatching(state.options);
   const sides = [[state.options, matching ? presetLabel(matching) : 'Your settings']];
-  if (state.compare) sides.push([PRESETS[state.compare].options, presetLabel(state.compare)]);
+  if (compare) sides.push([PRESETS[compare].options, presetLabel(compare)]);
   const results = sides.map(([options]) => expand(graph, reference, options));
   const urls = results.map((result) => new Set(result.members.map((m) => m.url)));
   // In a comparison, mark the concepts only one side contains.
-  const onlyHere = (i) => (state.compare ? new Set([...urls[i]].filter((url) => !urls[1 - i].has(url))) : null);
-  return h('div', { class: `results${state.compare ? ' results--compare' : ''}` },
+  const onlyHere = (i) => (compare ? new Set([...urls[i]].filter((url) => !urls[1 - i].has(url))) : null);
+  return h('div', { class: `results${compare ? ' results--compare' : ''}` },
     ...sides.map(([, heading], i) => resultCard(graph, reference, results[i], heading, onlyHere(i))));
 }
 
@@ -296,7 +302,7 @@ function changedNote() {
   const changed = changedRules();
   if (!changed.length) return null;
   return h('p', { class: 'changed-note' },
-    'Settings changed from the draft: ',
+    'Settings changed from round 1: ',
     changed.flatMap((rule, i) => [i ? '; ' : '', h('strong', {}, FIELD[rule.key] || rule.label), ` → ${optionLabel(rule, state.options[rule.key])}`]),
     '. ',
     h('button', { type: 'button', class: 'button button--text', onclick: () => { state.options = { ...DEFAULT_OPTIONS }; update(); } }, 'Reset'));
@@ -313,44 +319,43 @@ function stepOne(scenario) {
     changedNote(),
     renderResults(snapshot, scenario.reference),
     h('div', { class: 'question' },
-      h('p', { class: 'question__label' }, 'Question for the squad'),
-      h('p', { class: 'question__text' }, 'Is this the right result? CIEL\'s question, with PIH\'s Yes, No and Unknown as its answers.'),
+      h('p', { class: 'question__label' }, 'Round 1 · 25 Nov'),
+      h('p', { class: 'question__text' }, 'Agreed: this is the right result. CIEL\'s question, with PIH\'s Yes, No and Unknown as its answers.'),
+      h('p', {}, h('strong', {}, 'Still open: '), 'how OCL stores the answer links that move to PIH\'s concepts. It could work them out from the SAME-AS mappings each time, or create new PIH-owned mappings. Leaning: bring CIEL\'s own mappings into the collection, marked with the equivalency.'),
       h('p', { class: 'question__more' }, 'To compare: ',
         h('a', { href: '#s=1&cmp=off' }, 'without swapping (CIEL\'s Yes, No and Unknown)'), ' · ',
         h('a', { href: '#s=3' }, 'next: Step 2, a decision →'))),
   ];
 }
 
-const STEP_TWO_CHOICES = [
-  { compare: '', label: "PIH's own (draft)", detail: 'Never, In the past, Currently, Unknown' },
-  { compare: 'referenced', label: "CIEL's, swapped where PIH has them", detail: 'Never, In the past, Currently, Recently quit' },
-  { compare: 'union', label: 'Both', detail: 'All five' },
+const STEP_TWO_VIEWS = [
+  { compare: 'round1pih', label: 'The two choices', detail: 'Keep CIEL:163731, or choose PIH:2545' },
+  { compare: 'draft', label: 'Round 1 against the earlier draft', detail: 'The draft put PIH:2545 in either way, with PIH\'s answers' },
 ];
 
 function stepTwo(scenario) {
-  const atDraft = state.options.cascade === DEFAULT_OPTIONS.cascade;
-  const chosen = atDraft ? state.compare : null;
+  const atRoundOne = changedRules().length === 0;
+  const view = state.compare || (atRoundOne ? 'round1pih' : '');
   return [
     h('div', { class: 'scenario-head' },
       h('p', { class: 'step-label' }, 'Step 2 · A decision'),
       h('h2', {}, 'Tobacco use status'),
-      h('p', {}, 'You add the CIEL question Tobacco use status. PIH has the same question, History of tobacco use, so PIH\'s goes in.'),
+      h('p', {}, 'You add the CIEL question Tobacco use status. PIH has the same question, History of tobacco use.'),
       h('p', {}, 'Three answers match. CIEL also has Recently quit; PIH also has Unknown.')),
     h('div', { class: 'question' },
-      h('p', { class: 'question__label' }, 'Question for the squad (Rule 3)'),
-      h('p', { class: 'question__text' }, 'Whose answers come with the question?'),
-      h('div', { class: 'choices', role: 'group', 'aria-label': 'Whose answers come with the question' },
-        ...STEP_TWO_CHOICES.map((choice) => h('button', {
+      h('p', { class: 'question__label' }, 'Round 1 · 25 Nov'),
+      h('p', { class: 'question__text' }, 'Decided: OCL tells the person loudly that PIH:2545 is the same question, and makes them choose which one to add.'),
+      h('p', {}, h('strong', {}, 'Proposal, to check with the group: '), 'whichever they choose stays as chosen and brings its own answers, each swapped for PIH\'s where PIH has one. Choosing CIEL:163731 keeps Recently quit; choosing PIH:2545 brings Unknown.'),
+      h('p', {}, h('strong', {}, 'Still open: '), 'with CIEL\'s question, how would someone add PIH\'s Unknown or remove an answer they don\'t want? With PIH\'s, how would they add CIEL\'s Recently quit?'),
+      atRoundOne ? h('div', { class: 'choices', role: 'group', 'aria-label': 'What to show side by side' },
+        ...STEP_TWO_VIEWS.map((choice) => h('button', {
           type: 'button',
-          class: `choice${chosen === choice.compare ? ' choice--on' : ''}`,
-          'aria-pressed': String(chosen === choice.compare),
-          onclick: () => { state.options = { ...state.options, cascade: DEFAULT_OPTIONS.cascade }; state.compare = choice.compare; update(); },
-        }, h('span', { class: 'choice__label' }, choice.label), h('span', { class: 'choice__detail' }, choice.detail)))),
-      h('p', { class: 'question__more' }, chosen
-        ? 'Shown side by side with the draft. Highlighted concepts are in one result and not the other.'
-        : 'Pick an option to see it side by side with the draft.')),
+          class: `choice${view === choice.compare ? ' choice--on' : ''}`,
+          'aria-pressed': String(view === choice.compare),
+          onclick: () => { state.compare = choice.compare; update(); },
+        }, h('span', { class: 'choice__label' }, choice.label), h('span', { class: 'choice__detail' }, choice.detail)))) : null),
     changedNote(),
-    renderResults(snapshot, scenario.reference),
+    renderResults(snapshot, scenario.reference, view),
   ];
 }
 

@@ -51,6 +51,14 @@ export const RULES = [
     ],
   },
   {
+    key: 'root', rule: 2, label: 'The concept someone adds',
+    help: 'Round 1 proposal: a concept someone chose on purpose stays as chosen. Swaps apply to what the cascade reaches.',
+    options: [
+      { value: 'stays', label: 'Stays as they chose it' },
+      { value: 'swap', label: 'Is swapped like any other' },
+    ],
+  },
+  {
     key: 'tie', rule: 2, label: 'Two equivalents in one source',
     options: [
       { value: 'keep', label: 'Keep the original and flag it' },
@@ -87,24 +95,41 @@ export const RULES = [
       { value: 'offer', label: 'Offer the replacement' },
       { value: 'block', label: 'Block it' },
       { value: 'silent', label: 'Allow it silently' },
+      { value: 'choose', label: 'Make them choose' },
+    ],
+  },
+  {
+    key: 'pick', rule: 6, label: 'Which one they choose',
+    help: 'Only matters when they have to choose.',
+    options: [
+      { value: 'own', label: 'The concept they added' },
+      { value: 'equivalent', label: 'The higher-ranked equivalent' },
     ],
   },
 ];
 
-export const DEFAULT_OPTIONS = {
-  ranked: 'PIH>CIEL', lookIn: 'sources', direction: 'either', retired: 'ignore', substitution: 'replace',
-  tie: 'keep', cascade: 'replacement', answers: 'repoint', reference: 'keep', adding: 'inform',
+// The draft rules as the wiki first wrote them, before the squad's round 1 (25 Nov 2026).
+const DRAFT = {
+  ranked: 'PIH>CIEL', lookIn: 'sources', direction: 'either', retired: 'ignore', substitution: 'replace', root: 'swap',
+  tie: 'keep', cascade: 'replacement', answers: 'repoint', reference: 'keep', adding: 'inform', pick: 'own',
 };
 
+// Round 1: the squad decided that someone adding a concept with an equivalent must choose which one to add.
+// Jon's proposal, still to check with the group: the chosen concept stays as chosen and brings its own
+// answers and set members, each swapped where a higher-ranked source has an equivalent.
+export const DEFAULT_OPTIONS = { ...DRAFT, root: 'stays', cascade: 'referenced', adding: 'choose', pick: 'own' };
+
 export const PRESETS = {
-  draft: { label: 'Draft defaults', options: DEFAULT_OPTIONS },
+  round1: { label: 'Round 1', options: DEFAULT_OPTIONS },
+  round1pih: { label: 'Round 1, choosing the equivalent', options: { ...DEFAULT_OPTIONS, pick: 'equivalent' } },
+  draft: { label: 'Draft before round 1', options: DRAFT },
   // $cascade with omitIfExistsIn pointed at the collection: it checks only what the collection already
   // contains, and leaves concepts out rather than replacing them.
-  today: { label: 'OCL today', options: { ...DEFAULT_OPTIONS, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
-  referenced: { label: 'Follow the referenced concept', options: { ...DEFAULT_OPTIONS, cascade: 'referenced' } },
-  union: { label: 'Union of answers', options: { ...DEFAULT_OPTIONS, cascade: 'union' } },
-  stepwise: { label: 'Step by step', options: { ...DEFAULT_OPTIONS, cascade: 'stepwise' } },
-  off: { label: 'No equivalency', options: { ...DEFAULT_OPTIONS, substitution: 'off', adding: 'silent' } },
+  today: { label: 'OCL today', options: { ...DRAFT, lookIn: 'collection', substitution: 'omit', adding: 'silent' } },
+  referenced: { label: 'Draft, following the referenced concept', options: { ...DRAFT, cascade: 'referenced' } },
+  union: { label: 'Draft, union of answers', options: { ...DRAFT, cascade: 'union' } },
+  stepwise: { label: 'Draft, step by step', options: { ...DRAFT, cascade: 'stepwise' } },
+  off: { label: 'No equivalency', options: { ...DRAFT, substitution: 'off', adding: 'silent' } },
 };
 
 const SOURCE_PATTERN = /^\/(?:orgs|users)\/[^/]+\/(?:sources|collections)\/[^/]+\//;
@@ -228,7 +253,7 @@ export function expand(graph, reference, options = {}) {
 
   // Rule 6: what someone sees when they add the reference (always under the ranked list at that time).
   const atAdd = whenAdded(reference.concept);
-  const adding = describeAdding(reference.concept, atAdd, o.adding);
+  const adding = describeAdding(reference.concept, atAdd, o);
   if (adding.blocked) {
     trace.push(`Rule 6: adding ${shortLabel(reference.concept)} is blocked, so the collection gets nothing.`);
     return { reference: { ...reference, stored: null }, adding, members: [], tree: null, trace };
@@ -236,9 +261,10 @@ export function expand(graph, reference, options = {}) {
 
   // Rule 5: the reference stays as written, or is rewritten when it's added.
   let stored = reference.concept;
-  if ((o.reference === 'rewrite' || o.adding === 'offer') && atAdd.replaced) {
+  const choseEquivalent = o.adding === 'offer' || (o.adding === 'choose' && o.pick === 'equivalent');
+  if ((o.reference === 'rewrite' || choseEquivalent) && atAdd.replaced) {
     stored = atAdd.url;
-    trace.push(`Rule ${o.reference === 'rewrite' ? 5 : 6}: the reference was saved as ${shortLabel(stored)} instead of ${shortLabel(reference.concept)}.`);
+    trace.push(`Rule ${choseEquivalent ? 6 : 5}: the reference was saved as ${shortLabel(stored)} instead of ${shortLabel(reference.concept)}.`);
   } else {
     trace.push(`Rule 5: the reference stays ${shortLabel(reference.concept)}${reference.cascade ? ' with cascade' : ''}.`);
   }
@@ -300,7 +326,12 @@ export function expand(graph, reference, options = {}) {
   }
 
   function visit(original, depth, alsoFrom = []) {
-    const resolution = now(original);
+    // Round 1 proposal: the concept someone added stays as they chose it; swaps apply to what the cascade reaches.
+    const keepRoot = depth === 0 && o.root === 'stays';
+    const resolution = keepRoot ? { url: original, replaced: false } : now(original);
+    if (keepRoot && now(original).replaced) {
+      trace.push(`Rule 2: ${shortLabel(original)} stays as added, though ${shortLabel(now(original).url)} is its equivalent in a higher-ranked source.`);
+    }
     const node = { original, url: resolution.url, resolution, edges: [], children: [] };
     if (!resolution.url) {
       node.status = 'omitted';
@@ -356,13 +387,15 @@ export function expand(graph, reference, options = {}) {
   };
 }
 
-function describeAdding(url, resolution, mode) {
+function describeAdding(url, resolution, o) {
   if (!resolution.replaced) {
     return { kind: 'plain', text: `${shortLabel(url)} has no equivalent in a higher-ranked source, so it's added as written.` };
   }
   const original = shortLabel(url);
   const replacement = shortLabel(resolution.url);
-  switch (mode) {
+  switch (o.adding) {
+    case 'choose':
+      return { kind: 'offer', text: `${original} has an equivalent in a higher-ranked source: ${replacement}. They can bring different answers and set members, so choose which one to add. (Shown here as if they choose ${o.pick === 'equivalent' ? replacement : original}.)` };
     case 'block':
       return { kind: 'block', blocked: true, text: `Not added: ${replacement}, its equivalent in a higher-ranked source, is used instead. Add ${replacement} directly.` };
     case 'offer':
@@ -370,6 +403,8 @@ function describeAdding(url, resolution, mode) {
     case 'silent':
       return { kind: 'silent', text: `Added. Nothing tells the user that ${original} resolves to ${replacement}.` };
     default:
-      return { kind: 'inform', text: `Added. In this dictionary, ${original} resolves to ${replacement}.` };
+      return { kind: 'inform', text: o.root === 'stays'
+        ? `Added. ${original} stays as added, though ${replacement} is its equivalent in a higher-ranked source.`
+        : `Added. In this dictionary, ${original} resolves to ${replacement}.` };
   }
 }

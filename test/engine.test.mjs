@@ -141,3 +141,16 @@ test('Ranked list swapped: CIEL ranks first, so a CIEL reference expands as pure
   const result = expand(graph, scenario.reference, { ...PRESETS.draft.options, ranked: 'CIEL>PIH' });
   assert.ok(result.members.every((m) => m.url.startsWith('/orgs/CIEL/')));
 });
+
+test('Round 1: the concept someone chooses stays as chosen, and the cascade swaps what it reaches', () => {
+  const scenario = SCENARIOS.find((s) => s.id === '3');
+  const own = expand(graph, scenario.reference, PRESETS.round1.options);
+  assert.equal(shortLabel(own.reference.stored), 'CIEL:163731');
+  assert.equal(own.tree.status, 'kept');
+  assert.equal(own.adding.kind, 'offer');
+  assert.ok(own.tree.children.every((child) => child.edges.every((edge) => edge.status !== 'dangling')));
+  const equivalent = expand(graph, scenario.reference, PRESETS.round1pih.options);
+  assert.equal(shortLabel(equivalent.reference.stored), 'PIH:2545');
+  // With root "swap", round 1's cascade is the draft's "follow the referenced concept".
+  assert.deepEqual(membersOf(scenario, { ...PRESETS.round1.options, root: 'swap' }), membersOf(scenario, PRESETS.referenced.options));
+});

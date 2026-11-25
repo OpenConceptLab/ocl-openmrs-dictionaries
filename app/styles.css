@@ -80,7 +80,7 @@ h3 { font-size: 16px; }
 
 .tabs { display: flex; flex-wrap: wrap; gap: 0 2px; align-items: center; }
 @media (max-width: 600px) { .tabs { flex-wrap: nowrap; overflow-x: auto; } }
-.tabs a { flex: none; padding: 12px 12px 10px; text-decoration: none; color: var(--text-muted); border-bottom: 2px solid transparent; font-weight: 500; font-size: 14px; }
+.tabs a { flex: none; padding: 12px 10px 10px; text-decoration: none; color: var(--text-muted); border-bottom: 2px solid transparent; font-weight: 500; font-size: 14px; }
 .tabs a.tab--step { color: var(--text); }
 .tabs a[aria-current="page"] { color: var(--primary-40); border-bottom-color: var(--primary-40); }
 .tabs__divider { flex: none; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); padding: 0 6px 0 14px; margin-left: 6px; border-left: 1px solid var(--border); }
@@ -163,3 +163,4 @@ details.trace ol { margin: 8px 0 0; padding-left: 20px; }
   .controls__bar .button--outline { font-size: 13px; padding: 4px 12px; }
   .choice { min-width: 0; flex: 1 1 100%; }
 }
+.rule-proposal { margin: 4px 0 0; font-size: 13px; color: var(--primary-40); }
